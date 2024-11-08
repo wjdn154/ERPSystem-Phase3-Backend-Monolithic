@@ -1,6 +1,6 @@
 spring:
   application:
-    name: ERPSystem-phase3-Monolithic # 애플리케이션 이름 설정
+    name: ERPSystem-phase3-Monolithic # 애플리케이션 이름 설정.
   datasource:
     url: jdbc:mysql://localhost:3306/PUBLIC_TEST?useSSL=false&serverTimezone=UTC # 데이터베이스 URL 설정 (MySQL 데이터베이스 연결)
     username: root # 데이터베이스 사용자 이름

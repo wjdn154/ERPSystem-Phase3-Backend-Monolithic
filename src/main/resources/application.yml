@@ -1,0 +1,164 @@
+spring:
+  application:
+    name: ERPSystem-phase3-Monolithic # 애플리케이션 이름 설정
+  config:
+    import: "optional:classpath:.env"
+  datasource:
+#    url: jdbc:mysql://omz-erp-db:3306/PUBLIC?useSSL=false&serverTimezone=Asia/Seoul
+    url: jdbc:mysql://localhost:3306/PUBLIC?useSSL=false&serverTimezone=Asia/Seoul # 데이터베이스 URL 설정 (MySQL 데이터베이스 연결)
+    username: root # 데이터베이스 사용자 이름
+    password: 1234 # 데이터베이스 사용자 비밀번호
+#    password: ${DB_PASSWORD} # 데이터베이스 사용자 비밀번호
+    driver-class-name: com.mysql.cj.jdbc.Driver # 데이터베이스 드라이버 클래스 이름
+  jpa:
+    hibernate:
+      ddl-auto: none
+    #      ddl-auto: create-only
+    #    generate-ddl: true
+    properties:
+      hibernate:
+        format_sql: true
+        dialect: org.hibernate.dialect.MySQLDialect
+        multi-tenancy: SCHEMA # 멀티 테넌시 설정 (스키마 기반)
+        tenant_identifier_resolver: com.megazone.ERPSystem_phase3_Monolithic.common.config.multi_tenant.SchemaBasedTenantIdentifierResolver
+        multi_tenant_connection_provider: com.megazone.ERPSystem_phase3_Monolithic.common.config.multi_tenant.SchemaBasedMultiTenantConnectionProvider
+
+    #    show-sql: true # SQL 쿼리를 콘솔에 출력하도록 설정
+    show-sql: false # SQL 쿼리를 콘솔에 출력하도록 설정
+    defer-datasource-initialization: true # 데이터베이스 초기화를 지연시켜, 스키마 생성 후 데이터 초기화가 이루어지도록 설정
+#    open-in-view: false # OpenEntityManagerInView 패턴 사용 여부 설정
+  web:
+    resources:
+      static-locations:
+        - 'classpath:/static/' # 정적 리소스 위치 지정 (클래스패스 기준)
+        - 'classpath:/public/' # 정적 리소스 위치 지정 (클래스패스 기준)
+        - 'classpath:/resources/' # 정적 리소스 위치 지정 (클래스패스 기준)
+        - 'classpath:/META-INF/resources/' # 정적 리소스 위치 지정 (클래스패스 기준)
+        - 'file:src/main/frontend/dist/' # 정적 리소스 위치 지정 (파일 시스템 기준)
+  flyway:
+    enabled: false
+#    out-of-order: true
+#    baseline-on-migrate: true
+#    placeholders:
+#      log-file: "flyway-error.log"  # 로그 파일을 설정합니다.
+
+  sql:
+    init:
+      mode: never
+      data-locations:
+        - classpath:initial-database/financial/common/financial_contact.sql
+        - classpath:initial-database/financial/company/company_tax_office.sql
+        - classpath:initial-database/financial/company/company_main_business.sql
+        - classpath:initial-database/financial/company/company_address.sql
+        - classpath:initial-database/financial/company/company_corporate_kind.sql
+        - classpath:initial-database/financial/company/company_corporate_type.sql
+        - classpath:initial-database/financial/company/company_representative.sql
+        - classpath:initial-database/financial/company/company.sql
+        - classpath:initial-database/financial/account_subject/account_subject_structure.sql
+        - classpath:initial-database/financial/account_subject/account_subject_nature.sql
+        - classpath:initial-database/financial/account_subject/account_subject_Standard_financial_statement.sql
+        - classpath:initial-database/financial/account_subject/account_subject.sql
+        - classpath:initial-database/financial/account_subject/account_subject_cash_memo.sql
+        - classpath:initial-database/financial/account_subject/account_subject_fixed_memo.sql
+        - classpath:initial-database/financial/account_subject/account_subject_transfer_memo.sql
+        - classpath:initial-database/financial/common/financial_bank.sql
+        - classpath:initial-database/financial/client/client_category.sql
+        - classpath:initial-database/financial/bank_account/bank_account_type.sql
+        - classpath:initial-database/financial/common/financial_address.sql
+        - classpath:initial-database/financial/common/financial_bank_account.sql
+        #        - classpath:initial-database/financial/credit_card/credit_card.sql
+        - classpath:initial-database/financial/vat_type.sql
+        - classpath:initial-database/financial/journal_entry_type_setup.sql
+        - classpath:initial-database/financial/journal_entry.sql
+
+
+        - classpath:initial-database/hr/employee.sql
+        - classpath:initial-database/hr/role.sql
+        #        - classpath:initial-database/hr/users.sql
+        - classpath:initial-database/hr/attendance_management.sql
+        - classpath:initial-database/hr/requirement_management/JobPosting.sql
+
+        - classpath:initial-database/financial/client/client_contact_info.sql
+        - classpath:initial-database/financial/client/client_bank_account.sql
+        - classpath:initial-database/financial/client/client_business_info.sql
+        - classpath:initial-database/financial/client/client_financial_info.sql
+        - classpath:initial-database/financial/client/client_manager_info.sql
+        - classpath:initial-database/financial/client/client_liquor.sql
+        - classpath:initial-database/financial/client/client.sql
+        - classpath:initial-database/hr/users.sql
+
+        - classpath:initial-database/production/basic_data/process_routing/process_details.sql
+        - classpath:initial-database/production/basic_data/process_routing/process_routing.sql
+        - classpath:initial-database/production/basic_data/process_routing/routing_step.sql
+
+        - classpath:initial-database/logistics/currency.sql
+        - classpath:initial-database/logistics/product/product_group.sql
+        - classpath:initial-database/logistics/product/product.sql
+        - classpath:initial-database/logistics/warehouse/warehouse.sql
+        - classpath:initial-database/logistics/purchase_management/purchase_request.sql
+        - classpath:initial-database/logistics/purchase_management/purchase_order.sql
+        - classpath:initial-database/logistics/purchase_management/receiving_order.sql
+
+        - classpath:initial-database/logistics/sales_management/shipping_order.sql
+        - classpath:initial-database/logistics/sales_management/sale_plan.sql
+        - classpath:initial-database/logistics/sales_management/quotation.sql
+        - classpath:initial-database/logistics/sales_management/orders.sql
+        - classpath:initial-database/logistics/sales_management/sale_plan_detail.sql
+        - classpath:initial-database/logistics/sales_management/sale.sql
+
+        - classpath:initial-database/production/basic_data/bom/standard_bom.sql
+        - classpath:initial-database/production/basic_data/workcenter.sql
+        - classpath:initial-database/production/production_schedule/common_scheduling/shift_type.sql
+#
+        - classpath:initial-database/production/resource_data/equipmentData.sql
+        - classpath:initial-database/production/resource_data/maintenanceHistory.sql
+        - classpath:initial-database/production/resource_data/worker.sql
+        - classpath:initial-database/production/resource_data/materialData.sql
+        - classpath:initial-database/production/resource_data/hazardousMaterial.sql
+        - classpath:initial-database/production/basic_data/bom/bom_standard_bom_material.sql
+
+        - classpath:initial-database/production/production_schedule/common_scheduling/production_request.sql
+        - classpath:initial-database/production/production_schedule/plan_of_production/mps.sql
+        - classpath:initial-database/production/production_schedule/common_scheduling/production_order.sql
+        - classpath:initial-database/production/work_report/work_performance.sql
+        - classpath:initial-database/production/work_report/environmental_certification_assessment.sql
+#        - classpath:initial-database/production/production_schedule/common_scheduling/worker_assignment.sql
+
+        - classpath:initial-database/financial/unresolved_sale_and_purchase_voucher.sql
+        - classpath:initial-database/financial/unresolved_voucher.sql
+        - classpath:initial-database/financial/resolved_sale_and_purchase_voucher.sql
+        - classpath:initial-database/financial/resolved_voucher.sql
+#        -
+        - classpath:initial-database/hr/payment/employee_allowance.sql
+        - classpath:initial-database/hr/payment/employee_salary_step.sql
+        - classpath:initial-database/hr/payment/employee_position_salary_step.sql
+        - classpath:initial-database/hr/payment/position_salary_step_allowance.sql
+
+        - classpath:initial-database/hr/payment/employment_insurance_pension.sql
+        - classpath:initial-database/hr/payment/health_insurance_pension.sql
+        - classpath:initial-database/hr/payment/national_pension.sql
+        - classpath:initial-database/hr/payment/long_term_care_insurance_pension.sql
+        - classpath:initial-database/hr/payment/salary_ledger_date.sql
+        - classpath:initial-database/hr/payment/employee_income_tax.sql
+        - classpath:initial-database/hr/payment/salary_ledger.sql
+        - classpath:initial-database/hr/payment/salary_ledger_allowance.sql
+        - classpath:initial-database/logistics/purchase_management/purchase.sql
+
+        - classpath:initial-database/hr/payment/salary.sql
+
+
+logging:
+  level:
+#    root: DEBUG
+    root: INFO
+#    com.megazone: DEBUG
+#    org.flywaydb: DEBUG
+#    org.hibernate.SQL: DEBUG
+#    org.hibernate.type.descriptor.sql: TRACE
+  pattern:
+    console: "%d{yyyy-MM-dd HH:mm:ss} %-5level %highlight(%-5level) %logger{36} - %msg%n"
+jwt:
+  secret: dkanrjsk12341234dkanrjsk12341234dkanrjsk12341234dkanrjsk12341234
+#  secret: ${JWT_SECRET}
+  expiration: 86400
+  refresh-expiration: 604800

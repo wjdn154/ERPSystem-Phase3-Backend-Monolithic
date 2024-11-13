@@ -40,19 +40,19 @@ public class DataSourceConfig {
         return dataSource;
     }
 
-    @Bean
-    public CommandLineRunner testDataSource(DataSource dataSource) {
-
-        System.out.println("============================================ testDataSource CommandLineRunner 실행 ============================================");
-
-        return args -> {
-            try (Connection conn = dataSource.getConnection()) {
-                System.out.println("DB 연결 시도: " + conn.getMetaData().getDatabaseProductName());
-            } catch (SQLException e) {
-                System.err.println("DB 연결 실패: " + e.getMessage());
-                e.printStackTrace();
-            }
-        };
-    }
+//    @Bean
+//    public CommandLineRunner testDataSource(DataSource dataSource) {
+//
+//        System.out.println("============================================ testDataSource CommandLineRunner 실행 ============================================");
+//
+//        return args -> {
+//            try (Connection conn = dataSource.getConnection()) {
+//                System.out.println("DB 연결 시도: " + conn.getMetaData().getDatabaseProductName());
+//            } catch (SQLException e) {
+//                System.err.println("DB 연결 실패: " + e.getMessage());
+//                e.printStackTrace();
+//            }
+//        };
+//    }
 
 }

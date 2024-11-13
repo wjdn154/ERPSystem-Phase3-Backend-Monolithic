@@ -27,7 +27,6 @@ import java.util.Set;
 @Slf4j
 @Service
 @RequiredArgsConstructor
-//@DependsOn({"dataSource", "entityManagerFactory"})  // 데이터베이스와 EntityManagerFactory 초기화 후 실행
 public class TenantService {
 
     private final JdbcTemplate jdbcTemplate;  // JDBC 연동을 위한 JdbcTemplate

@@ -34,6 +34,10 @@ public class SecretManagerConfig {
                     .secretId(secretName)
                     .build();
             GetSecretValueResponse getSecretValueResponse = client.getSecretValue(getSecretValueRequest);
+
+            // ARN을 로그에 출력
+            log.info("KMS 확인 위한 ARN 로그: " + getSecretValueResponse.arn());
+
             ObjectMapper mapper = new ObjectMapper();
             try {
                 JsonNode node = mapper.readTree(getSecretValueResponse.secretString());
@@ -63,6 +67,9 @@ public class SecretManagerConfig {
         }
 
         String secret = getSecretValueResponse.secretString();
+
+        // ARN을 로그에 출력
+        log.info("KMS 확인 위한 ARN 로그: " + getSecretValueResponse.arn());
 
         ObjectMapper mapper = new ObjectMapper();
         DatabaseCredentials credentials;

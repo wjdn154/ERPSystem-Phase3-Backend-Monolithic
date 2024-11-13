@@ -27,7 +27,8 @@ public class WebConfig {
                                 "http://omz-erp.click",
                                 "https://omz-erp.click",
                                 "http://www.omz-erp.click",
-                                "https://www.omz-erp.click"
+                                "https://www.omz-erp.click",
+                                "http://localhost:3000"
                         )
                         .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
                         .allowedHeaders("*")

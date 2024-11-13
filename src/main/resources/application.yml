@@ -2,10 +2,11 @@ spring:
   application:
     name: ERPSystem-phase3-Monolithic
   datasource:
-    url: jdbc:mysql://omz-erp-db.omz.svc.cluster.local:3306/PUBLIC
+    url: jdbc:mysql://127.0.0.1:3307/PUBLIC
+#    url: jdbc:mysql://omz-erp-db.omz.svc.cluster.local:3306/PUBLIC
 #    url: jdbc:mysql://localhost:3306/PUBLIC?useSSL=false&serverTimezone=Asia/Seoul
-    username: root
-    password: 1234
+    username: admin
+    password: tjdghk7025!A
 #    password: ${DB_PASSWORD}
     driver-class-name: com.mysql.cj.jdbc.Driver
   jpa:
@@ -147,8 +148,8 @@ spring:
 
 logging:
   level:
-    root: DEBUG
-#    root: INFO
+#    root: DEBUG
+    root: INFO
 #    com.megazone: DEBUG
 #    org.flywaydb: DEBUG
 #    org.hibernate.SQL: DEBUG

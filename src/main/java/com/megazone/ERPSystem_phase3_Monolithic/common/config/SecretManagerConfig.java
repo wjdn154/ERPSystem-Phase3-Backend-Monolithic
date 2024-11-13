@@ -2,9 +2,11 @@ package com.megazone.ERPSystem_phase3_Monolithic.common.config;
 
  import com.fasterxml.jackson.databind.JsonNode;
  import com.fasterxml.jackson.databind.ObjectMapper;
+ import jakarta.annotation.PostConstruct;
  import lombok.Getter;
  import lombok.extern.slf4j.Slf4j;
  import org.springframework.beans.factory.annotation.Value;
+ import org.springframework.context.annotation.Bean;
  import org.springframework.context.annotation.Configuration;
  import software.amazon.awssdk.regions.Region;
  import software.amazon.awssdk.services.secretsmanager.SecretsManagerClient;
@@ -21,6 +23,10 @@ public class SecretManagerConfig {
     private String jwtSecret;
     private SecretsManagerClient client;
 
+    @PostConstruct
+    public void init() {
+        this.client = SecretsManagerClient.builder().region(Region.of(region)).build();
+    }
 
     public String getJwtSecret() {
         if (jwtSecret == null) {  // 캐싱하지 않은 경우에만 Secrets Manager 호출
@@ -34,7 +40,7 @@ public class SecretManagerConfig {
                 JsonNode node = mapper.readTree(getSecretValueResponse.secretString());
                 jwtSecret = node.get("JWT_SECRET").asText();
             } catch (Exception e) {
-                throw new RuntimeException("Failed to parse JWT_SECRET from secret JSON", e);
+                throw new RuntimeException("JWT_SECRET secret JSON 구문 분석에 실패했습니다.", e);
             }
         }
         return jwtSecret;
@@ -44,11 +50,11 @@ public class SecretManagerConfig {
     public DatabaseCredentials getSecret() {
 
         String secretName = "omz-env-secrets-backend";
-        Region awsRegion = Region.of(region);
-
-        SecretsManagerClient client = SecretsManagerClient.builder()
-                .region(awsRegion)
-                .build();
+//        Region awsRegion = Region.of(region);
+//
+//        SecretsManagerClient client = SecretsManagerClient.builder()
+//                .region(awsRegion)
+//                .build();
 
         GetSecretValueRequest getSecretValueRequest = GetSecretValueRequest.builder()
                 .secretId(secretName)
@@ -76,7 +82,7 @@ public class SecretManagerConfig {
             System.out.println("node = ");
             System.out.println("node = " + node);
         } catch (Exception e) {
-            throw new RuntimeException("secret JSON 구문 분석에 실패했습니다.", e);
+            throw new RuntimeException("DB secret JSON 구문 분석에 실패했습니다.", e);
         }
 
         log.info("데이터베이스 자격 증명을 성공적으로 검색했습니다.");

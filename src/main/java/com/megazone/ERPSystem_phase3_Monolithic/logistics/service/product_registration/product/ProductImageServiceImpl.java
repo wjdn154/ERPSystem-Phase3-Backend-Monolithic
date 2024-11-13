@@ -25,15 +25,14 @@ public class ProductImageServiceImpl implements ProductImageService {
     private final S3Client s3Client;
     private final ProductImageRepository productImageRepository;
 
-    private String awsRegion = "ap-northeast-2";
+//    private String awsRegion = "ap-northeast-2";
+//    private String bucketName = "rjsgh-bucket";
 
-    private String bucketName = "rjsgh-bucket";
+    @Value("${AWS_REGION:ap-northeast-2}")
+    private String awsRegion;
 
-//    @Value("${AWS_REGION}")
-//    private String awsRegion;
-//
-//    @Value("${AWS_S3_BUCKET_NAME}")
-//    private String bucketName;
+    @Value("${AWS_S3_BUCKET_NAME:omz-erp-image-upload-bucket}") // TODO 동적 주입 해결
+    private String bucketName;
 
     @Override
     public String uploadProductImage(MultipartFile image) {

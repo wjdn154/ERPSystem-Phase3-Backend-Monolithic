@@ -1,15 +1,13 @@
 package com.megazone.ERPSystem_phase3_Monolithic.common.config.security;
 
-import com.megazone.ERPSystem_phase3_Monolithic.hr.repository.basic_information_management.Users.UsersRepository;
-import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
-import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
@@ -17,82 +15,72 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
-import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 
-import java.util.List;
+import java.util.Arrays;
 
-/**
- * JWT 기반 보안 설정을 정의한 클래스임.
- * JwtRequestFilter를 통해 요청을 필터링하고, 사용자 인증을 처리함.
- */
 @Configuration
 public class SecurityConfig {
 
+    private final JwtRequestFilter jwtRequestFilter;
+    private final JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
 
-    private final JwtRequestFilter jwtRequestFilter;  // JWT 요청 필터 주입 변수 선언
-    private final JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;  // JWT 인증 진입점 주입 변수 선언
-
-    // JwtRequestFilter 주입하는 생성자
     public SecurityConfig(JwtRequestFilter jwtRequestFilter, JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint) {
         this.jwtRequestFilter = jwtRequestFilter;
         this.jwtAuthenticationEntryPoint = jwtAuthenticationEntryPoint;
     }
 
-    /**
-     * @param http HttpSecurity 객체, 요청에 따른 보안 설정 정의함.
-     * @return SecurityFilterChain 보안 필터 체인 반환함.
-     * @throws Exception 보안 설정 관련 예외 발생 가능함.
-     */
-    @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        http
-                .csrf(AbstractHttpConfigurer::disable)  // CSRF 비활성화
-                .cors(cors -> cors.configurationSource(corsConfigurationSource()))  // CORS 설정 추가
-                .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/api/hr/auth/**").permitAll()
-                        .requestMatchers("/api/financial/company/**").permitAll()
-                        .requestMatchers("/api/notifications/subscribe").permitAll()
-                        .requestMatchers(org.springframework.http.HttpMethod.OPTIONS, "/**").permitAll()  // 모든 OPTIONS 요청 허용
-                        .anyRequest().authenticated()  // 나머지 모든 요청은 인증이 필요
-                )
-                .exceptionHandling(exception -> exception
-                        .authenticationEntryPoint(jwtAuthenticationEntryPoint))
-                .sessionManagement(session -> session
-                        .sessionCreationPolicy(SessionCreationPolicy.STATELESS))  // 세션을 사용하지 않고 JWT 인증
-                .addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class);  // JWT 필터 추가
-
-        return http.build();
-    }
-
-    // CORS 설정 빈 추가
+    // CORS 설정을 위한 CorsConfigurationSource 빈 정의
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(List.of("https://omz-erp.click", "https://www.omz-erp.click"));
-        configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
-        configuration.setAllowedHeaders(List.of("Authorization", "Content-Type"));
+
+        configuration.setAllowedOrigins(Arrays.asList(
+                "http://www.omz-erp.click",
+                "https://www.omz-erp.click",
+                "http://omz-erp.click",
+                "https://omz-erp.click"
+        ));
+        configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
+        configuration.setAllowedHeaders(Arrays.asList("*"));
         configuration.setAllowCredentials(true);
+        configuration.setExposedHeaders(Arrays.asList("Authorization", "Content-Type"));
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", configuration);
         return source;
     }
 
-    /**
-     * @param authenticationConfiguration AuthenticationConfiguration 객체, 인증 매니저 설정에 사용됨.
-     * @return AuthenticationManager 인증 매니저 반환함.
-     * @throws Exception 인증 매니저 설정 중 예외 발생 가능함.
-     */
+    // SecurityFilterChain 설정
     @Bean
-    public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception {
-        return authenticationConfiguration.getAuthenticationManager();  // AuthenticationManager 설정하여 반환함.
+    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+        http
+                .csrf(AbstractHttpConfigurer::disable)
+                .cors(cors -> cors.configurationSource(corsConfigurationSource()))  // CORS 설정 적용
+                .authorizeHttpRequests(auth -> auth
+                        .requestMatchers("/api/hr/auth/**").permitAll()
+                        .requestMatchers("/api/financial/company/**").permitAll()
+                        .requestMatchers("/api/notifications/subscribe").permitAll()
+                        .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
+                        .anyRequest().authenticated()
+                )
+                .exceptionHandling(exception -> exception
+                        .authenticationEntryPoint(jwtAuthenticationEntryPoint))
+                .sessionManagement(session -> session
+                        .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                .addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class);
+
+        return http.build();
     }
 
-    /**
-     * @return PasswordEncoder 비밀번호 암호화를 위한 BCryptPasswordEncoder 반환함.
-     */
+    // AuthenticationManager 빈 정의
+    @Bean
+    public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception {
+        return authenticationConfiguration.getAuthenticationManager();
+    }
+
+    // PasswordEncoder 빈 정의
     @Bean
     public PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();  // 비밀번호 암호화에 사용할 BCrypt 암호화 방식 설정함.
+        return new BCryptPasswordEncoder();
     }
 }

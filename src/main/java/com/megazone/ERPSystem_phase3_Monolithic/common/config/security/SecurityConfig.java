@@ -14,6 +14,12 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
+
+import java.util.List;
 
 /**
  * JWT 기반 보안 설정을 정의한 클래스임.
@@ -39,23 +45,37 @@ public class SecurityConfig {
      */
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        // 보안 설정 정의
-        http.csrf(csrf -> csrf.disable())  // CSRF 비활성화.
+        http
+                .csrf(AbstractHttpConfigurer::disable)  // CSRF 비활성화
+                .cors(cors -> cors.configurationSource(corsConfigurationSource()))  // CORS 설정 추가
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/api/hr/auth/**").permitAll()
                         .requestMatchers("/api/financial/company/**").permitAll()
                         .requestMatchers("/api/notifications/subscribe").permitAll()
-                        .anyRequest().authenticated()  // 나머지 모든 요청은 인증이 필요.
+                        .requestMatchers(org.springframework.http.HttpMethod.OPTIONS, "/**").permitAll()  // 모든 OPTIONS 요청 허용
+                        .anyRequest().authenticated()  // 나머지 모든 요청은 인증이 필요
                 )
                 .exceptionHandling(exception -> exception
                         .authenticationEntryPoint(jwtAuthenticationEntryPoint))
                 .sessionManagement(session -> session
-                        .sessionCreationPolicy(SessionCreationPolicy.STATELESS));  // 세션을 사용하지 않고 JWT 인증.
+                        .sessionCreationPolicy(SessionCreationPolicy.STATELESS))  // 세션을 사용하지 않고 JWT 인증
+                .addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class);  // JWT 필터 추가
 
-        // JWT 필터를 UsernamePasswordAuthenticationFilter 앞에 추가.
-        http.addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class);
+        return http.build();
+    }
 
-        return http.build();  // 설정된 보안 필터 체인 반환함.
+    // CORS 설정 빈 추가
+    @Bean
+    public CorsConfigurationSource corsConfigurationSource() {
+        CorsConfiguration configuration = new CorsConfiguration();
+        configuration.setAllowedOrigins(List.of("https://omz-erp.click", "https://www.omz-erp.click"));
+        configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
+        configuration.setAllowedHeaders(List.of("Authorization", "Content-Type"));
+        configuration.setAllowCredentials(true);
+
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/**", configuration);
+        return source;
     }
 
     /**

@@ -1,11 +1,13 @@
 spring:
   application:
     name: ERPSystem-phase3-Monolithic # 애플리케이션 이름 설정
+#  datasource:
+#    url: jdbc:mysql://omz-erp-db.omz.svc.cluster.local:3306/PUBLIC
 
   jpa:
     hibernate:
       ddl-auto: none
-#          ddl-auto: create
+    #      ddl-auto: create-only
     #    generate-ddl: true
     properties:
       hibernate:
@@ -146,7 +148,6 @@ logging:
 #    com.megazone: DEBUG
 #    org.flywaydb: DEBUG
 #    org.hibernate.SQL: DEBUG
-    org.hibernate.type.descriptor.sql: TRACE
-
+#    org.hibernate.type.descriptor.sql: TRACE
   pattern:
     console: "%d{yyyy-MM-dd HH:mm:ss} %-5level %highlight(%-5level) %logger{36} - %msg%n"

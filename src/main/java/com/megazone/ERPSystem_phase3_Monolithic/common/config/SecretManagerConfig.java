@@ -17,7 +17,6 @@ package com.megazone.ERPSystem_phase3_Monolithic.common.config;
 @Configuration
 public class SecretManagerConfig {
 
-//    @Value("${AWS_REGION}")
     @Value("${AWS_REGION:ap-northeast-2}") // Default region 설정 가능
     private String region;
     private String jwtSecret;
@@ -50,11 +49,6 @@ public class SecretManagerConfig {
     public DatabaseCredentials getSecret() {
 
         String secretName = "omz-env-secrets-backend";
-//        Region awsRegion = Region.of(region);
-//
-//        SecretsManagerClient client = SecretsManagerClient.builder()
-//                .region(awsRegion)
-//                .build();
 
         GetSecretValueRequest getSecretValueRequest = GetSecretValueRequest.builder()
                 .secretId(secretName)

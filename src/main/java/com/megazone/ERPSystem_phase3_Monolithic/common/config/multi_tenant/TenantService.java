@@ -27,88 +27,36 @@ import java.util.Set;
 @Slf4j
 @Service
 @RequiredArgsConstructor
-@DependsOn({"dataSource", "entityManagerFactory"})  // 데이터베이스와 EntityManagerFactory 초기화 후 실행
+//@DependsOn({"dataSource", "entityManagerFactory"})  // 데이터베이스와 EntityManagerFactory 초기화 후 실행
 public class TenantService {
 
     private final JdbcTemplate jdbcTemplate;  // JDBC 연동을 위한 JdbcTemplate
     private final EntityManagerFactory entityManagerFactory;  // 엔티티 관리를 위한 EntityManagerFactory
     private final SqlInitProperties sqlInitProperties;  // SQL 초기화 프로퍼티
 
-    @EventListener(ApplicationReadyEvent.class)
+    /**
+     * 애플리케이션 시작 시 스키마 및 테넌트 초기화 진행
+     *
+     * @throws Exception 스키마 처리나 테넌트 등록 시 발생하는 예외 처리
+     */
+    @PostConstruct
     public void init() throws Exception {
-        if (jdbcTemplate == null) {
-            System.err.println("JdbcTemplate 주입 실패!");
-        } else {
-            System.out.println("JdbcTemplate이 주입되었습니다.");
-        }
-
-        if (entityManagerFactory == null) {
-            System.err.println("EntityManagerFactory 주입 실패!");
-        } else {
-            System.out.println("EntityManagerFactory가 주입되었습니다.");
-        }
-
+        // PUBLIC 스키마 및 테넌트 스키마 처리
         handlePublicSchema();
         registerTenant("tenant_1");
         registerTenant("tenant_2");
     }
 
-//    /**
-//     * 애플리케이션 시작 시 스키마 및 테넌트 초기화 진행
-//     *
-//     * @throws Exception 스키마 처리나 테넌트 등록 시 발생하는 예외 처리
-//     */
-//    @PostConstruct
-//    public void init() throws Exception {
-//        // PUBLIC 스키마 및 테넌트 스키마 처리
-//        handlePublicSchema();
-//        registerTenant("tenant_1");
-//        registerTenant("tenant_2");
-//    }
-
-//    /**
-//     * PUBLIC 스키마 초기화 및 테이블 생성, 초기값 삽입
-//     *
-//     * @throws Exception 스키마 생성 및 데이터 삽입 시 발생하는 예외 처리
-//     */
-//    private void handlePublicSchema() throws Exception {
-//        dropAndCreatePublicSchema();
-//        generateTablesForSchema("PUBLIC");
-//        insertInitialDataForSchema("PUBLIC");
-//    }
-
+    /**
+     * PUBLIC 스키마 초기화 및 테이블 생성, 초기값 삽입
+     *
+     * @throws Exception 스키마 생성 및 데이터 삽입 시 발생하는 예외 처리
+     */
     private void handlePublicSchema() throws Exception {
-        log.info("PUBLIC SCHEMA 초기화 핸들링중...");
-
-        // 스키마 삭제 후 생성 시도
-        try {
-            dropAndCreatePublicSchema();
-            log.info("PUBLIC 스키마 생성 성공.");
-        } catch (Exception e) {
-            log.error("PUBLIC 생성 실패. Error: ", e);
-            throw e;
-        }
-
-        // 스키마에 테이블 생성
-        try {
-            generateTablesForSchema("PUBLIC");
-            log.info("Tables created successfully in PUBLIC schema.");
-        } catch (Exception e) {
-            log.error("Failed to generate tables for PUBLIC schema. Error: ", e);
-            throw e;
-        }
-
-        // 초기 데이터 삽입
-        try {
-            insertInitialDataForSchema("PUBLIC");
-            log.info("Initial data inserted successfully in PUBLIC schema.");
-        } catch (Exception e) {
-            log.error("Failed to insert initial data for PUBLIC schema. Error: ", e);
-            throw e;
-        }
+        dropAndCreatePublicSchema();
+        generateTablesForSchema("PUBLIC");
+        insertInitialDataForSchema("PUBLIC");
     }
-
-
 
     /**
      * 테넌트 스키마 생성 및 테이블 생성, 초기값 삽입

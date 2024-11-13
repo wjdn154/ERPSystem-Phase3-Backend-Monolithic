@@ -16,7 +16,6 @@ import java.sql.SQLException;
 @Slf4j
 @Configuration
 @RequiredArgsConstructor
-@DependsOn("secretManagerConfig")  // SecretManagerConfig가 먼저 초기화됨
 public class DataSourceConfig {
 
     private final SecretManagerConfig secretManagerConfig;

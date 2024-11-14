@@ -1,5 +1,6 @@
 package com.megazone.ERPSystem_phase3_Monolithic.common.config;
 
+import com.zaxxer.hikari.HikariDataSource;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.CommandLineRunner;
@@ -25,34 +26,16 @@ public class DataSourceConfig {
     public DataSource dataSource() {
         DatabaseCredentials credentials = secretManagerConfig.getSecret();
 
-//        log.info("DB URL: " + credentials.getUrl());
-//        log.info("DB User: " + credentials.getUsername());
-//        log.info("DB PW: " + credentials.getPassword());
-
-        DriverManagerDataSource dataSource = new DriverManagerDataSource();
+        HikariDataSource dataSource = new HikariDataSource();
         dataSource.setDriverClassName("com.mysql.cj.jdbc.Driver");
 
-        dataSource.setUrl(credentials.getUrl());
+        dataSource.setJdbcUrl(credentials.getUrl());
         dataSource.setUsername(credentials.getUsername());
         dataSource.setPassword(credentials.getPassword());
 
-        log.info("DataSource 빈이 생성되었습니다: " + dataSource);
+        dataSource.setMaximumPoolSize(10);
+        dataSource.setMinimumIdle(5);
+
         return dataSource;
     }
-
-//    @Bean
-//    public CommandLineRunner testDataSource(DataSource dataSource) {
-//
-//        System.out.println("============================================ testDataSource CommandLineRunner 실행 ============================================");
-//
-//        return args -> {
-//            try (Connection conn = dataSource.getConnection()) {
-//                System.out.println("DB 연결 시도: " + conn.getMetaData().getDatabaseProductName());
-//            } catch (SQLException e) {
-//                System.err.println("DB 연결 실패: " + e.getMessage());
-//                e.printStackTrace();
-//            }
-//        };
-//    }
-
 }

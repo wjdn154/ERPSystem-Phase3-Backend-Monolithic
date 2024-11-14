@@ -55,10 +55,7 @@ public class S3Config {
             String secretKey = node.get("AWS_SECRET_ACCESS_KEY").asText();
             this.awsRegion = node.get("AWS_REGION").asText();
             this.bucketName = node.get("AWS_S3_BUCKET_NAME").asText();
-
-            log.info("S3 자격 증명을 성공적으로 파싱했습니다. 버킷 이름: {}", bucketName, awsRegion);
-
-
+            
             return S3Client.builder()
                     .region(Region.of(awsRegion))
                     .credentialsProvider(StaticCredentialsProvider.create(

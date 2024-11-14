@@ -17,14 +17,12 @@ package com.megazone.ERPSystem_phase3_Monolithic.common.config;
 @Configuration
 public class SecretManagerConfig {
 
-    @Value("${AWS_REGION:ap-northeast-2}") // Default region 설정 가능
-    private String region;
     private String jwtSecret;
     private SecretsManagerClient client;
 
     @PostConstruct
     public void init() {
-        this.client = SecretsManagerClient.builder().region(Region.of(region)).build();
+        this.client = SecretsManagerClient.builder().build();
     }
 
     public String getJwtSecret() {
@@ -69,17 +67,15 @@ public class SecretManagerConfig {
         try {
             JsonNode node = mapper.readTree(secret);
             credentials = new DatabaseCredentials(
-                    node.get("DB_URL").asText(),
+                    node.get("DB_CLUSTER_URL").asText(),
+//                    node.get("DB_URL").asText(),
                     node.get("DB_USER").asText(),
                     node.get("DB_PASSWORD").asText()
             );
-            System.out.println("node = ");
-            System.out.println("node = " + node);
         } catch (Exception e) {
             throw new RuntimeException("DB secret JSON 구문 분석에 실패했습니다.", e);
         }
 
-        log.info("데이터베이스 자격 증명을 성공적으로 검색했습니다.");
         return credentials;
     }
 }

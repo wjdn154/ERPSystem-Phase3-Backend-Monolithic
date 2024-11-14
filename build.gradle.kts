@@ -63,6 +63,13 @@ dependencies {
 	implementation ("software.amazon.awssdk:core:2.20.57") 	// AWS SDK Core
 	implementation("software.amazon.awssdk:kms:2.20.57") // AWS KMS SDK
 
+	// AWS X-Ray SDK Core
+	implementation ("com.amazonaws:aws-xray-recorder-sdk-core:2.9.1")
+	// AWS SDK와 연동이 필요한 경우 (예: S3 등)
+	implementation ("com.amazonaws:aws-xray-recorder-sdk-aws-sdk-v2:2.9.1")
+	// SLF4J를 통한 로그 통합이 필요한 경우
+	implementation ("com.amazonaws:aws-xray-recorder-sdk-slf4j:2.9.1")
+
 	// JSON 파싱을 위한 라이브러리 (예: Jackson)
 	implementation ("com.fasterxml.jackson.core:jackson-databind:2.15.2")
 
@@ -72,6 +79,7 @@ dependencies {
 	annotationProcessor("com.querydsl:querydsl-apt:5.0.0:jakarta") // Querydsl APT 어노테이션 프로세서
 	annotationProcessor("jakarta.annotation:jakarta.annotation-api") // Jakarta 어노테이션 API
 	annotationProcessor("jakarta.persistence:jakarta.persistence-api") // Jakarta Persistence API
+
 	// Lombok 및 개발 도구
 	compileOnly("org.projectlombok:lombok") // Lombok
 	developmentOnly("org.springframework.boot:spring-boot-devtools") // Spring Boot DevTools
@@ -79,6 +87,7 @@ dependencies {
 	// 테스트 관련 의존성
 	testImplementation("org.springframework.boot:spring-boot-starter-test") // Spring Boot 테스트 스타터
 	testRuntimeOnly("org.junit.platform:junit-platform-launcher") // JUnit 플랫폼 런처
+
 	// MySQL JDBC 드라이버
 	runtimeOnly("mysql:mysql-connector-java:8.0.30") // MySQL 드라이버
 }

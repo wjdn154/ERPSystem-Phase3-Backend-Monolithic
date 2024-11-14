@@ -2,6 +2,7 @@ package com.megazone.ERPSystem_phase3_Monolithic.common.config;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -23,9 +24,12 @@ import java.nio.file.Paths;
 
 @Slf4j
 @Configuration
+@Getter
 public class S3Config {
 
     private static final String SECRET_NAME = "omz-env-secrets-backend";
+    private String awsRegion;
+    private String bucketName;
 
     @Bean
     public S3Client s3Client() {
@@ -49,14 +53,14 @@ public class S3Config {
 
             String accessKey = node.get("AWS_ACCESS_KEY_ID").asText();
             String secretKey = node.get("AWS_SECRET_ACCESS_KEY").asText();
-            String region = node.get("AWS_REGION").asText();
-            String bucketName = node.get("AWS_S3_BUCKET_NAME").asText();
+            this.awsRegion = node.get("AWS_REGION").asText();
+            this.bucketName = node.get("AWS_S3_BUCKET_NAME").asText();
 
-            log.info("S3 자격 증명을 성공적으로 파싱했습니다. 버킷 이름: {}", bucketName);
+            log.info("S3 자격 증명을 성공적으로 파싱했습니다. 버킷 이름: {}", bucketName, awsRegion);
 
 
             return S3Client.builder()
-                    .region(Region.of(region))
+                    .region(Region.of(awsRegion))
                     .credentialsProvider(StaticCredentialsProvider.create(
                             AwsBasicCredentials.create(accessKey, secretKey)))
                     .build();

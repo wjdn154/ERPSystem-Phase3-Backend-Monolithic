@@ -25,9 +25,9 @@ public class DataSourceConfig {
     public DataSource dataSource() {
         DatabaseCredentials credentials = secretManagerConfig.getSecret();
 
-        log.info("DB URL: " + credentials.getUrl());
-        log.info("DB User: " + credentials.getUsername());
-        log.info("DB PW: " + credentials.getPassword());
+//        log.info("DB URL: " + credentials.getUrl());
+//        log.info("DB User: " + credentials.getUsername());
+//        log.info("DB PW: " + credentials.getPassword());
 
         DriverManagerDataSource dataSource = new DriverManagerDataSource();
         dataSource.setDriverClassName("com.mysql.cj.jdbc.Driver");

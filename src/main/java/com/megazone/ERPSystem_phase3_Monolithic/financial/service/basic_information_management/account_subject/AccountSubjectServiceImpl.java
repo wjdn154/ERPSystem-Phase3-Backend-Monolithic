@@ -231,20 +231,8 @@ public class AccountSubjectServiceImpl implements AccountSubjectService {
     }
 
     @Override
-    public List<AccountSubjectDTO> searchAccountSubject(String searchText) {
-        List<AccountSubject> accountSubjects;
-
-
-        // 검색 텍스트가 없으면 모든 계정과목 조회
-        if(searchText != null) {
-            accountSubjects = accountSubjectRepository.findByNameOrCodeContainingOrderByCodeAsc(searchText, searchText); // 검색어로 계정과목 조회
-        }else {
-            accountSubjects = accountSubjectRepository.findAllByOrderByCodeAsc(); // 모든 계정과목 조회
-        }
-
-        return accountSubjects.stream()
-                .map(this::convertToDTO)
-                .collect(Collectors.toList());
+    public List<AccountSubjectSearchDTO> searchAccountSubject() {
+        return accountSubjectRepository.findAllByOrderByCodeAsc();
     }
 
     /**

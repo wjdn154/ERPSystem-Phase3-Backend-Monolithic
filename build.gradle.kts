@@ -59,10 +59,9 @@ dependencies {
 	implementation("org.modelmapper:modelmapper:2.4.4") // ModelMapper
 
 	implementation("software.amazon.awssdk:s3:2.20.25") // AWS S3 SDK
-
-	// AWS SDK Core
-	implementation ("software.amazon.awssdk:secretsmanager:2.20.57")
-	implementation ("software.amazon.awssdk:core:2.20.57")
+	implementation ("software.amazon.awssdk:secretsmanager:2.20.57") // AWS Secrets Manager
+	implementation ("software.amazon.awssdk:core:2.20.57") 	// AWS SDK Core
+	implementation("software.amazon.awssdk:kms:2.20.57") // AWS KMS SDK
 
 	// AWS X-Ray SDK Core
 	implementation ("com.amazonaws:aws-xray-recorder-sdk-core:2.9.1")

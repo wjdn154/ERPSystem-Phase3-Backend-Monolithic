@@ -38,7 +38,9 @@ public class SecurityConfig {
                 "http://www.omz-erp.click",
                 "https://www.omz-erp.click",
                 "http://omz-erp.click",
-                "https://omz-erp.click"
+                "https://omz-erp.click",
+                "http://127.0.0.1:3000",
+                "http://localhost:3000"
         ));
         configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
         configuration.setAllowedHeaders(Arrays.asList("*"));

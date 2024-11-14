@@ -3,11 +3,15 @@ package com.megazone.ERPSystem_phase3_Monolithic.common.config.multi_tenant;
 import jakarta.annotation.PostConstruct;
 import jakarta.persistence.EntityManagerFactory;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.flywaydb.core.Flyway;
 import org.hibernate.boot.MetadataSources;
 import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
 import org.hibernate.engine.spi.SessionFactoryImplementor;
 import org.hibernate.tool.hbm2ddl.SchemaExport;
+import org.springframework.boot.context.event.ApplicationReadyEvent;
+import org.springframework.context.annotation.DependsOn;
+import org.springframework.context.event.EventListener;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -20,6 +24,7 @@ import java.util.EnumSet;
 import java.util.List;
 import java.util.Set;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class TenantService {

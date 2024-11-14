@@ -36,8 +36,8 @@ INSERT INTO product_image (image_path, created_at) VALUES
 INSERT INTO product (
     code, product_group_id, client_id, process_routing_id, product_type, purchase_price, sales_price, name, standard, unit, image_path, remarks, is_active
 ) VALUES
-      ('B0001', 1, 1, 1, 'SEMI_FINISHED_PRODUCT', 1500, 2000, '엔진 오일 필터', '200mm', 'EA', 'https://rjsgh-bucket.s3.ap-northeast-2.amazonaws.com/1d3e4b3e-fd32-4705-87dd-9c965157a3c2_엔진 오일 필터.jpg', '자동차 엔진 오일 필터', TRUE),
-      ('B0002', 2, 2, 1, 'SEMI_FINISHED_PRODUCT', 5000, 7000, '브레이크 패드', '300mm', 'EA', 'https://rjsgh-bucket.s3.ap-northeast-2.amazonaws.com/65c87361-f7b6-4b73-ba27-98ea65bb3270_브레이크 패드.jpg', '고성능 브레이크 패드', TRUE),
+      ('B0001', 1, 1, 1, 'SEMI_FINISHED_PRODUCT', 1500, 2000, '엔진오일필터 엑시브250', '200mm', 'EA', 'https://omz-erp-image-upload-bucket.s3.ap-northeast-2.amazonaws.com/48bd0525-91f0-4e71-94f2-b732c191c025_엔진오일필터-엑시브250.jpg', '자동차 엔진 오일 필터', TRUE),
+      ('B0002', 2, 2, 1, 'SEMI_FINISHED_PRODUCT', 5000, 7000, '브레이크 패드', '300mm', 'EA', 'https://omz-erp-image-upload-bucket.s3.ap-northeast-2.amazonaws.com/33678db6-1f6c-497f-877c-e957003783a5_브레이크 패드.jpg', '고성능 브레이크 패드', TRUE),
       ('B0003', 3, 3, 2, 'SEMI_FINISHED_PRODUCT', 8000, 10000, '연료 필터', '150mm', 'EA', 'https://rjsgh-bucket.s3.ap-northeast-2.amazonaws.com/f24415b5-f8fd-46d5-a9c9-84daefbbdfd6_연료 필터.jpg', '차량 연료 정화용 필터', TRUE),
       ('B0004', 4, 4, 3, 'SEMI_FINISHED_PRODUCT', 12000, 15000, '점화 플러그', '100mm', 'SET', 'https://rjsgh-bucket.s3.ap-northeast-2.amazonaws.com/b6dad635-a8dc-43ec-ae0a-0004aead928c_점화 플러그.jpg', '자동차 점화 플러그 세트', TRUE),
       ('B0005', 5, 5, 4, 'SEMI_FINISHED_PRODUCT', 3000, 5000, '에어 필터', '250mm', 'EA', 'https://rjsgh-bucket.s3.ap-northeast-2.amazonaws.com/84d0acfd-39f3-4562-9a55-a34d7c021d13_에어 필터.jpg', '자동차 실내 공기 정화용 에어 필터', TRUE),

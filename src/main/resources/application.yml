@@ -1,13 +1,9 @@
 spring:
   application:
-    name: ERPSystem-phase3-Monolithic
-  datasource:
-    url: jdbc:mysql://omz-erp-db.omz.svc.cluster.local:3306/PUBLIC
-#    url: jdbc:mysql://localhost:3306/PUBLIC?useSSL=false&serverTimezone=Asia/Seoul
-    username: root
-    password: 1234
-#    password: ${DB_PASSWORD}
-    driver-class-name: com.mysql.cj.jdbc.Driver
+    name: ERPSystem-phase3-Monolithic # 애플리케이션 이름 설정
+#  datasource:
+#    url: jdbc:mysql://omz-erp-db.omz.svc.cluster.local:3306/PUBLIC
+
   jpa:
     hibernate:
       ddl-auto: none
@@ -120,7 +116,7 @@ spring:
         - classpath:initial-database/production/production_schedule/common_scheduling/production_order.sql
         - classpath:initial-database/production/work_report/work_performance.sql
         - classpath:initial-database/production/work_report/environmental_certification_assessment.sql
-#        - classpath:initial-database/production/production_schedule/common_scheduling/worker_assignment.sql
+        - classpath:initial-database/production/production_schedule/common_scheduling/worker_assignment.sql
 
         - classpath:initial-database/financial/unresolved_sale_and_purchase_voucher.sql
         - classpath:initial-database/financial/unresolved_voucher.sql
@@ -155,8 +151,3 @@ logging:
 #    org.hibernate.type.descriptor.sql: TRACE
   pattern:
     console: "%d{yyyy-MM-dd HH:mm:ss} %-5level %highlight(%-5level) %logger{36} - %msg%n"
-jwt:
-  secret: dkanrjsk12341234dkanrjsk12341234dkanrjsk12341234dkanrjsk12341234
-#  secret: ${JWT_SECRET}
-  expiration: 86400
-  refresh-expiration: 604800

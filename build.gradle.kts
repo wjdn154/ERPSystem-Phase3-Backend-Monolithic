@@ -82,6 +82,7 @@ dependencies {
 	testRuntimeOnly("org.junit.platform:junit-platform-launcher") // JUnit 플랫폼 런처
 	// MySQL JDBC 드라이버
 	runtimeOnly("mysql:mysql-connector-java:8.0.30") // MySQL 드라이버
+//	runtimeOnly ("mysql:mysql-connector-java")
 }
 
 // 소스 세트 설정: 생성된 QClass 파일을 메인 소스 디렉토리에 포함

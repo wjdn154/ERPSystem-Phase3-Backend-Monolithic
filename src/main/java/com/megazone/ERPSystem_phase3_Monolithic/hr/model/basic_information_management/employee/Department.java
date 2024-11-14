@@ -27,10 +27,10 @@ public class Department {
 //    @OneToMany(mappedBy = "toDepartment") // 도착 부서
 //    private List<Transfer> transfersTo;
 
-    @Column(name="departmentCode", nullable = false,unique = true)
+    @Column(name="department_code", nullable = false,unique = true)
     private String departmentCode; // 부서번호
 
-    @Column(name="departmentName", nullable = false)
+    @Column(name="department_name", nullable = false)
     private String departmentName; // 부서명
 
     @Column(name="location", nullable = false)

@@ -2,25 +2,44 @@ spring:
   application:
     name: ERPSystem-phase3-Monolithic
   datasource:
-    url: jdbc:mysql://127.0.0.1:3307/PUBLIC
+    writer:
+      jdbc-url: jdbc:mysql://127.0.0.1:3308/PUBLIC
+      username: admin
+      password: tjdghk7025!A
+      driver-class-name: com.mysql.cj.jdbc.Driver
+      hikari:
+        maximum-pool-size: 10
+    reader:
+      jdbc-url: jdbc:mysql://127.0.0.1:3307/PUBLIC
+      username: admin
+      password: tjdghk7025!A
+      driver-class-name: com.mysql.cj.jdbc.Driver
+      hikari:
+        maximum-pool-size: 10
+#    url: jdbc:mysql://127.0.0.1:3307/PUBLIC
 #    url: jdbc:mysql://omz-erp-db.omz.svc.cluster.local:3306/PUBLIC
 #    url: jdbc:mysql://localhost:3306/PUBLIC?useSSL=false&serverTimezone=Asia/Seoul
-    username: admin
-    password: tjdghk7025!A
+#    username: admin
+#    password: tjdghk7025!A
 #    password: ${DB_PASSWORD}
-    driver-class-name: com.mysql.cj.jdbc.Driver
+#    driver-class-name: com.mysql.cj.jdbc.Driver
   jpa:
     hibernate:
-      ddl-auto: none
+      ddl-auto: create-drop
     #      ddl-auto: create-only
     #    generate-ddl: true
+      naming:
+        physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
     properties:
       hibernate:
         format_sql: true
+#        highlight_sql: true #신규
         dialect: org.hibernate.dialect.MySQLDialect
         multi-tenancy: SCHEMA # 멀티 테넌시 설정 (스키마 기반)
-        tenant_identifier_resolver: com.megazone.ERPSystem_phase3_Monolithic.common.config.multi_tenant.SchemaBasedTenantIdentifierResolver
-        multi_tenant_connection_provider: com.megazone.ERPSystem_phase3_Monolithic.common.config.multi_tenant.SchemaBasedMultiTenantConnectionProvider
+#        use_sql_comments: true #신규
+#        show_sql: true; # 신규
+    #        tenant_identifier_resolver: com.megazone.ERPSystem_phase3_Monolithic.common.config.multi_tenant.SchemaBasedTenantIdentifierResolver
+#        multi_tenant_connection_provider: com.megazone.ERPSystem_phase3_Monolithic.common.config.multi_tenant.SchemaBasedMultiTenantConnectionProvider
 
     #    show-sql: true # SQL 쿼리를 콘솔에 출력하도록 설정
     show-sql: false # SQL 쿼리를 콘솔에 출력하도록 설정
@@ -152,6 +171,7 @@ logging:
     root: INFO
 #    com.megazone: DEBUG
 #    org.flywaydb: DEBUG
+#    org.hibernate.boot.model.naming: TRACE # 신규
 #    org.hibernate.SQL: DEBUG
 #    org.hibernate.type.descriptor.sql: TRACE
   pattern:

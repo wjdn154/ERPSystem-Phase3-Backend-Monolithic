@@ -23,13 +23,13 @@ public class LoggingAspect {
             "execution(* com.megazone.ERPSystem_phase3_Monolithic.production.controller..*(..))")
     public Object logApiRequest(ProceedingJoinPoint joinPoint) throws Throwable {
         String methodName = joinPoint.getSignature().getName();
-        logger.info("API 메소드 시작: " + methodName);
+        logger.info("메소드 시작: " + methodName);
         Object result;
         try {
             result = joinPoint.proceed(); // 메소드 실행
-            logger.info("API 메소드 종료: " + methodName);
+            logger.info("메소드 종료: " + methodName);
         } catch (Exception e) {
-            logger.error("API 메소드 실행 중 예외 발생: " + methodName, e);
+            logger.error("메소드 실행 중 예외 발생: " + methodName, e);
             throw e;
         }
         return result;
@@ -41,7 +41,7 @@ public class LoggingAspect {
             "execution(* com.megazone.ERPSystem_phase3_Monolithic.logistics.service..*(..)) || " +
             "execution(* com.megazone.ERPSystem_phase3_Monolithic.production.service..*(..))")
     public Object logServiceMethods(ProceedingJoinPoint joinPoint) throws Throwable {
-        String methodName = joinPoint.getSignature().toShortString();
+        String methodName = joinPoint.getSignature().getName();
         logger.info("서비스 메소드 시작: " + methodName);
 
         // 메인 세그먼트 생성
@@ -66,7 +66,7 @@ public class LoggingAspect {
             "execution(* com.megazone.ERPSystem_phase3_Monolithic.logistics.repository..*(..)) || " +
             "execution(* com.megazone.ERPSystem_phase3_Monolithic.production.repository..*(..))")
     public Object logRepositoryMethods(ProceedingJoinPoint joinPoint) throws Throwable {
-        String methodName = joinPoint.getSignature().toShortString();
+        String methodName = joinPoint.getSignature().getName();
         logger.info("리포지토리 메소드 시작: " + methodName);
 
         // 메인 세그먼트가 있는지 확인 후 서브세그먼트 조건부 생성

@@ -1,9 +1,6 @@
 package com.megazone.ERPSystem_phase3_Monolithic.financial.service.basic_information_management.account_subject;
 
-import com.megazone.ERPSystem_phase3_Monolithic.financial.model.basic_information_management.account_subject.dto.AccountSubjectDTO;
-import com.megazone.ERPSystem_phase3_Monolithic.financial.model.basic_information_management.account_subject.dto.AccountSubjectsAndMemosDTO;
-import com.megazone.ERPSystem_phase3_Monolithic.financial.model.basic_information_management.account_subject.dto.CashMemoDTO;
-import com.megazone.ERPSystem_phase3_Monolithic.financial.model.basic_information_management.account_subject.dto.MemoRequestDTO;
+import com.megazone.ERPSystem_phase3_Monolithic.financial.model.basic_information_management.account_subject.dto.*;
 
 import java.util.List;
 import java.util.Objects;
@@ -18,7 +15,7 @@ public interface AccountSubjectService {
 
     Optional<AccountSubjectDTO> saveAccountSubject(AccountSubjectDTO dto);
 
-    List<AccountSubjectDTO> searchAccountSubject(String searchText);
+    List<AccountSubjectSearchDTO> searchAccountSubject();
 
     void deleteAccount(String code);
 

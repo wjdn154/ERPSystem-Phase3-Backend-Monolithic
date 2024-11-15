@@ -67,8 +67,8 @@ public class SecretManagerConfig {
         try {
             JsonNode node = mapper.readTree(secret);
             credentials = new DatabaseCredentials(
-//                    node.get("DB_CLUSTER_URL").asText(),
-                    node.get("DB_URL").asText(),
+                    node.get("DB_CLUSTER_URL").asText(),
+//                    node.get("DB_URL").asText(),
                     node.get("DB_USER").asText(),
                     node.get("DB_PASSWORD").asText()
             );

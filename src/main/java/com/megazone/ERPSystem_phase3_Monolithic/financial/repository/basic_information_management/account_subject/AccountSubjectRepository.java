@@ -23,7 +23,7 @@ public interface AccountSubjectRepository extends JpaRepository<AccountSubject, 
     @Query("SELECT a FROM account_subject a WHERE a.name LIKE %:name% OR a.code LIKE %:code% ORDER BY LENGTH(a.code), a.code ASC")
     List<AccountSubject> findByNameOrCodeContainingOrderByCodeAsc(@Param("name") String name, @Param("code") String code);
 
-    @Query("SELECT new com.megazone.ERPSystem_phase3_Monolithic.financial.model.basic_information_management.account_subject.dto.AccountSubjectSearchDTO(a.name, a.code) " +
+    @Query("SELECT new com.megazone.ERPSystem_phase3_Monolithic.financial.model.basic_information_management.account_subject.dto.AccountSubjectSearchDTO(a.code, a.name) " +
             "FROM account_subject a ORDER BY LENGTH(a.code), a.code ASC")
     List<AccountSubjectSearchDTO> findAllByOrderByCodeAsc();
 }

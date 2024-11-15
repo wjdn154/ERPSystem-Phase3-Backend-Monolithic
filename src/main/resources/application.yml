@@ -3,14 +3,18 @@ spring:
     name: ERPSystem-phase3-Monolithic
   datasource:
     writer:
-      jdbc-url: jdbc:mysql://127.0.0.1:3308/PUBLIC
+#      jdbc-url: jdbc:mysql://proxy-1731639053722-omz-erp-db.proxy-cb8aguu88dgk.ap-northeast-2.rds.amazonaws.com:3306/PUBLIC # 메인db
+      jdbc-url: jdbc:mysql://omz-erp-proxy.proxy-cb8aguu88dgk.ap-northeast-2.rds.amazonaws.com:3306/PUBLIC # 테스트db
+#      jdbc-url: jdbc:mysql://127.0.0.1:3309/PUBLIC
       username: admin
       password: tjdghk7025!A
       driver-class-name: com.mysql.cj.jdbc.Driver
       hikari:
         maximum-pool-size: 10
     reader:
-      jdbc-url: jdbc:mysql://127.0.0.1:3307/PUBLIC
+#      jdbc-url: jdbc:mysql://proxy-1731639053722-omz-erp-db-read-only.endpoint.proxy-cb8aguu88dgk.ap-northeast-2.rds.amazonaws.com:3306/PUBLIC # 메인db
+      jdbc-url: jdbc:mysql://omz-erp-proxy-read-only.endpoint.proxy-cb8aguu88dgk.ap-northeast-2.rds.amazonaws.com:3306/PUBLIC # 테스트db
+#      jdbc-url: jdbc:mysql://127.0.0.1:3310/PUBLIC
       username: admin
       password: tjdghk7025!A
       driver-class-name: com.mysql.cj.jdbc.Driver

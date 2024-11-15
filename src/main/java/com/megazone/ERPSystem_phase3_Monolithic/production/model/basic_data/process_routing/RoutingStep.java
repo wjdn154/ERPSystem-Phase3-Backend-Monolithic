@@ -10,7 +10,7 @@ import lombok.*;
 @Table(name = "process_routing_routing_step", uniqueConstraints = {
         @UniqueConstraint(columnNames = {"process_routing_id", "step_order"})
 }, indexes = {
-        @Index(name = "idx_routing_step_order", columnList = "process_routing_id, stepOrder")
+        @Index(name = "idx_routing_step_order", columnList = "process_routing_id, step_order")
 })
 @AttributeOverride(name = "id.processRoutingId", column = @Column(name = "process_routing_id"))
 @AttributeOverride(name = "id.processId", column = @Column(name = "process_id"))

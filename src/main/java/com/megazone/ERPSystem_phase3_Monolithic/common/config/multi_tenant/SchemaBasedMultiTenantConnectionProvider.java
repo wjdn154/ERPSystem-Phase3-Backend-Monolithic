@@ -3,6 +3,7 @@ package com.megazone.ERPSystem_phase3_Monolithic.common.config.multi_tenant;
 import org.hibernate.cfg.AvailableSettings;
 import org.hibernate.engine.jdbc.connections.spi.MultiTenantConnectionProvider;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.autoconfigure.orm.jpa.HibernatePropertiesCustomizer;
 import org.springframework.stereotype.Component;
 
@@ -18,8 +19,13 @@ import java.util.Map;
 public class SchemaBasedMultiTenantConnectionProvider implements MultiTenantConnectionProvider, HibernatePropertiesCustomizer {
 
     // DB 연결 관리를 위한 DataSource 객체
+
+    private final DataSource dataSource;
+
     @Autowired
-    private DataSource dataSource;
+    public SchemaBasedMultiTenantConnectionProvider(@Qualifier("dynamicDataSource") DataSource dataSource) {
+        this.dataSource = dataSource;
+    }
 
     /**
      * PUBLIC 스키마를 사용하는 기본 연결을 반환함.

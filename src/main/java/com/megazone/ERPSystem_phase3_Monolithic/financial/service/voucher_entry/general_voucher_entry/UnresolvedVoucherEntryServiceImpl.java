@@ -20,9 +20,9 @@ import com.megazone.ERPSystem_phase3_Monolithic.financial.repository.voucher_ent
 import com.megazone.ERPSystem_phase3_Monolithic.hr.model.basic_information_management.employee.Employee;
 import com.megazone.ERPSystem_phase3_Monolithic.hr.model.basic_information_management.employee.enums.UserPermission;
 import com.megazone.ERPSystem_phase3_Monolithic.hr.repository.basic_information_management.Employee.EmployeeRepository;
-import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -35,7 +35,6 @@ import java.util.function.Function;
 
 @Service
 @RequiredArgsConstructor
-@Transactional
 public class UnresolvedVoucherEntryServiceImpl implements UnresolvedVoucherEntryService {
 
     private final ResolvedVoucherService resolvedVoucherService;
@@ -71,6 +70,7 @@ public class UnresolvedVoucherEntryServiceImpl implements UnresolvedVoucherEntry
 
 
     @Override
+    @Transactional()
     public List<UnresolvedVoucher> unresolvedVoucherEntry(List<UnresolvedVoucherEntryDTO> dtoList) {
 
         List<UnresolvedVoucher> unresolvedVoucherList = new ArrayList<UnresolvedVoucher>();
@@ -260,6 +260,7 @@ public class UnresolvedVoucherEntryServiceImpl implements UnresolvedVoucherEntry
      * @return 해당 날짜의 모든 전표 반환
      */
     @Override
+    @Transactional(readOnly = true)
     public List<UnresolvedVoucher> unresolvedVoucherAllSearch(LocalDate date) {
         List<UnresolvedVoucher> unresolvedVoucherList = new ArrayList<UnresolvedVoucher>();
         try {
@@ -279,6 +280,7 @@ public class UnresolvedVoucherEntryServiceImpl implements UnresolvedVoucherEntry
      * @dto 삭제할 전표의 날짜, 전표번호List, 당당자 정보 객체
      */
     @Override
+    @Transactional()
     public List<Long> deleteUnresolvedVoucher(UnresolvedVoucherDeleteDTO dto) {
 
         // 전표에 담당자 이거나, 승인권자면 삭제가능 << 기능구현 필요
@@ -332,8 +334,8 @@ public class UnresolvedVoucherEntryServiceImpl implements UnresolvedVoucherEntry
     }
 
     @Override
+    @Transactional()
     public List<UnresolvedVoucher> voucherApprovalProcessing(UnresolvedVoucherApprovalDTO dto) {
-//        List<UnresolvedVoucher> unresolvedVoucherList = unresolvedVoucherRepository.findAll(); // 초기 데이터 등록용
 
         if(dto.getApprovalStatus().equals(ApprovalStatus.PENDING)) {
             throw new RuntimeException("승인 대기 상태로는 변경할 수 없습니다.");
@@ -391,6 +393,7 @@ public class UnresolvedVoucherEntryServiceImpl implements UnresolvedVoucherEntry
     }
 
     @Override
+    @Transactional(readOnly = true)
     public UnresolvedVoucherShowAllDTO unresolvedVoucherApprovalSearch(LocalDate date) {
 
 

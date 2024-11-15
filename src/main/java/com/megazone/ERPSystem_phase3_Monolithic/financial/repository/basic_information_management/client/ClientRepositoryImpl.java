@@ -25,19 +25,10 @@ public class ClientRepositoryImpl implements ClientRepositoryCustom {
     @Override
     public List<fetchClientListDTO> fetchClientList() {
         return queryFactory
-                .select(Projections.fields(fetchClientListDTO.class,
+                .select(Projections.constructor(fetchClientListDTO.class,
                         client.id,
-                        client.representativeName,
-                        client.printClientName,
-                        client.address.roadAddress,
-                        client.address.detailedAddress,
-                        client.contactInfo.phoneNumber,
-                        client.businessInfo.businessType,
-                        client.transactionStartDate,
-                        client.transactionEndDate,
-                        client.remarks
+                        client.printClientName
                 )).from(QClient.client)
                 .fetch();
-
     }
 }

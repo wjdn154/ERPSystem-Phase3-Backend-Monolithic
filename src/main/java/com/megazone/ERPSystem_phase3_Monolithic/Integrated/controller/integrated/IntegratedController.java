@@ -17,8 +17,6 @@ public class IntegratedController {
 
     private final IntegratedService integratedService;
 
-    private final SecretManagerConfig secretManagerConfig;
-
     @PostMapping("/dashboard")
     public ResponseEntity<Object> dashboard() {
         try {
@@ -27,12 +25,4 @@ public class IntegratedController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
         }
     }
-
-    @GetMapping("/secret")
-    public String getSecret() {
-
-        secretManagerConfig.getSecret();
-        return "AWS Secret Retrieval Success!!!";
-    }
-
 }

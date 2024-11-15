@@ -42,6 +42,12 @@ public class ClientController {
         return clientService.fetchClientList();
     }
 
+
+    @PostMapping("/searchClientList")
+    public ResponseEntity<Object> searchClientList() {
+        return clientService.searchClientList();
+    }
+
     /**
      * id로 거래처 상세 정보 조회
      */
@@ -81,11 +87,6 @@ public class ClientController {
         if (savedClient == null) return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
 
         return ResponseEntity.ok("저장 완료");
-    }
-
-    @PostMapping("/search")
-    public List<ClientDTO> searchClient(@RequestBody Map<String, String> searchText) {
-        return clientService.searchClient(searchText.get("searchText"));
     }
 
     /**

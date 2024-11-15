@@ -18,8 +18,8 @@ import java.util.Optional;
 public interface ClientService {
     Long saveClient(ClientDTO clientDTO);
     ClientDTO updateClient(ClientDTO clientDTO);
-    List<ClientDTO> searchClient(String searchText);
     ResponseEntity<Object> fetchClientList();
+    ResponseEntity<Object> searchClientList();
     ResponseEntity<Object> fetchClient(Long id);
     List<LiquorDTO> fetchLiquorList();
     List<CategoryDTO> fetchCategoryList();

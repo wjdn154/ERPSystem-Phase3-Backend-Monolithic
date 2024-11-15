@@ -1,10 +1,12 @@
 package com.megazone.ERPSystem_phase3_Monolithic.financial.model.basic_information_management.client.dto;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
 
 import java.time.LocalDate;
 
 @Data
+@AllArgsConstructor
 public class fetchClientListDTO {
     private Long id; // id
     private String representativeName; // 대표자명

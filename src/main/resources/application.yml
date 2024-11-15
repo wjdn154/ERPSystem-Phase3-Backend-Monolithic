@@ -1,26 +1,27 @@
 spring:
   application:
-    name: ERPSystem-phase3-Monolithic # 애플리케이션 이름 설정
-#  datasource:
-#    url: jdbc:mysql://omz-erp-db.omz.svc.cluster.local:3306/PUBLIC
-
+    name: ERPSystem-phase3-Monolithic
+  datasource:
+    hikari:
+      maximum-pool-size: 10
+      minimum-idle: 5
+    writer:
+      driver-class-name: com.mysql.cj.jdbc.Driver
+    reader:
+      driver-class-name: com.mysql.cj.jdbc.Driver
   jpa:
     hibernate:
       ddl-auto: none
-    #      ddl-auto: create-only
-    #    generate-ddl: true
     properties:
       hibernate:
         format_sql: true
+        highlight_sql: true #신규
         dialect: org.hibernate.dialect.MySQLDialect
         multi-tenancy: SCHEMA # 멀티 테넌시 설정 (스키마 기반)
         tenant_identifier_resolver: com.megazone.ERPSystem_phase3_Monolithic.common.config.multi_tenant.SchemaBasedTenantIdentifierResolver
         multi_tenant_connection_provider: com.megazone.ERPSystem_phase3_Monolithic.common.config.multi_tenant.SchemaBasedMultiTenantConnectionProvider
-
-    #    show-sql: true # SQL 쿼리를 콘솔에 출력하도록 설정
     show-sql: false # SQL 쿼리를 콘솔에 출력하도록 설정
     defer-datasource-initialization: true # 데이터베이스 초기화를 지연시켜, 스키마 생성 후 데이터 초기화가 이루어지도록 설정
-#    open-in-view: false # OpenEntityManagerInView 패턴 사용 여부 설정
   web:
     resources:
       static-locations:
@@ -31,10 +32,6 @@ spring:
         - 'file:src/main/frontend/dist/' # 정적 리소스 위치 지정 (파일 시스템 기준)
   flyway:
     enabled: false
-#    out-of-order: true
-#    baseline-on-migrate: true
-#    placeholders:
-#      log-file: "flyway-error.log"  # 로그 파일을 설정합니다.
 
   sql:
     init:
@@ -103,7 +100,7 @@ spring:
         - classpath:initial-database/production/basic_data/bom/standard_bom.sql
         - classpath:initial-database/production/basic_data/workcenter.sql
         - classpath:initial-database/production/production_schedule/common_scheduling/shift_type.sql
-#
+
         - classpath:initial-database/production/resource_data/equipmentData.sql
         - classpath:initial-database/production/resource_data/maintenanceHistory.sql
         - classpath:initial-database/production/resource_data/worker.sql
@@ -122,7 +119,7 @@ spring:
         - classpath:initial-database/financial/unresolved_voucher.sql
         - classpath:initial-database/financial/resolved_sale_and_purchase_voucher.sql
         - classpath:initial-database/financial/resolved_voucher.sql
-#        -
+
         - classpath:initial-database/hr/payment/employee_allowance.sql
         - classpath:initial-database/hr/payment/employee_salary_step.sql
         - classpath:initial-database/hr/payment/employee_position_salary_step.sql
@@ -147,7 +144,7 @@ logging:
     root: INFO
 #    com.megazone: DEBUG
 #    org.flywaydb: DEBUG
-    org.hibernate.SQL: DEBUG
-    org.hibernate.type.descriptor.sql: TRACE
+#    org.hibernate.boot.model.naming: TRACE # 신규
+#    org.hibernate.SQL: DEBUG
   pattern:
     console: "%d{yyyy-MM-dd HH:mm:ss} %-5level %highlight(%-5level) %logger{36} - %msg%n"

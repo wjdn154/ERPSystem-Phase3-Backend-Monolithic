@@ -9,8 +9,6 @@ import com.megazone.ERPSystem_phase3_Monolithic.Integrated.repository.dashboard.
 import com.megazone.ERPSystem_phase3_Monolithic.Integrated.service.notification.NotificationService;
 import com.megazone.ERPSystem_phase3_Monolithic.financial.model.basic_information_management.account_subject.*;
 import com.megazone.ERPSystem_phase3_Monolithic.financial.model.basic_information_management.account_subject.dto.*;
-import com.megazone.ERPSystem_phase3_Monolithic.financial.model.basic_information_management.company.Company;
-import com.megazone.ERPSystem_phase3_Monolithic.financial.model.basic_information_management.company.dto.CompanyDTO;
 import com.megazone.ERPSystem_phase3_Monolithic.financial.repository.basic_information_management.account_subject.AccountSubjectRepository;
 import com.megazone.ERPSystem_phase3_Monolithic.financial.repository.basic_information_management.account_subject.NatureRepository;
 import com.megazone.ERPSystem_phase3_Monolithic.financial.repository.basic_information_management.account_subject.StructureRepository;

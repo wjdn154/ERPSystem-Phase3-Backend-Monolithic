@@ -1,5 +1,6 @@
 package com.megazone.ERPSystem_phase3_Monolithic.production.service.resource_data.equipment;
 
+import com.megazone.ERPSystem_phase3_Monolithic.common.config.S3Config;
 import com.megazone.ERPSystem_phase3_Monolithic.hr.model.basic_information_management.employee.EmployeeImage;
 import com.megazone.ERPSystem_phase3_Monolithic.production.model.resource_data.equipment.EquipmentDataImage;
 import com.megazone.ERPSystem_phase3_Monolithic.production.repository.resource_data.equipment.EquipmentImageRepository;
@@ -23,16 +24,7 @@ public class EquipmentDataImageServiceImpl implements EquipmentDataImageService{
 
     private final S3Client s3Client;
     private final EquipmentImageRepository equipmentImageRepository;
-
-    private String awsRegion = "ap-northeast-2";
-
-    private String bucketName = "rjsgh-bucket";
-
-//    @Value("${AWS_REGION}")
-//    private String awsRegion;
-//
-//    @Value("${AWS_S3_BUCKET_NAME}")
-//    private String bucketName;
+    private final S3Config s3Config;
 
     @Override
     public String uploadEquipmentDataImage(MultipartFile image) {
@@ -55,7 +47,7 @@ public class EquipmentDataImageServiceImpl implements EquipmentDataImageService{
         String fileName = UUID.randomUUID().toString() + "_" + Paths.get(image.getOriginalFilename()).getFileName().toString();
 
         PutObjectRequest putObjectRequest = PutObjectRequest.builder()
-                .bucket(bucketName)
+                .bucket(s3Config.getBucketName())
                 .key(fileName)
                 .contentType(image.getContentType())
                 .build();
@@ -63,7 +55,7 @@ public class EquipmentDataImageServiceImpl implements EquipmentDataImageService{
         PutObjectResponse putObjectResponse = s3Client.putObject(putObjectRequest, software.amazon.awssdk.core.sync.RequestBody.fromBytes(image.getBytes()));
 
         if (putObjectResponse.sdkHttpResponse().isSuccessful()) {
-            return "https://" + bucketName + ".s3." + awsRegion + ".amazonaws.com/" + fileName;
+            return "https://" + s3Config.getBucketName() + ".s3." + s3Config.getAwsRegion() + ".amazonaws.com/" + fileName;
         } else {
             throw new IOException("S3 업로드에 실패했습니다.");
         }

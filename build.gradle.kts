@@ -36,7 +36,6 @@ dependencies {
 	implementation("org.springframework.boot:spring-boot-starter-web") // 웹 스타터
 	implementation("org.springframework.boot:spring-boot-starter-data-jpa") // JPA 스타터
 	implementation("org.flywaydb:flyway-mysql") // Flyway
-	implementation("org.hibernate:hibernate-core:6.5.2.Final") // Hibernate Core
 	implementation("org.hibernate.tool:hibernate-tools-orm:6.5.2.Final")
 	implementation("org.hibernate.tool:hibernate-tools-utils:6.5.2.Final")
 
@@ -90,6 +89,7 @@ dependencies {
 
 	// MySQL JDBC 드라이버
 	runtimeOnly("mysql:mysql-connector-java:8.0.30") // MySQL 드라이버
+//	runtimeOnly ("mysql:mysql-connector-java")
 }
 
 // 소스 세트 설정: 생성된 QClass 파일을 메인 소스 디렉토리에 포함

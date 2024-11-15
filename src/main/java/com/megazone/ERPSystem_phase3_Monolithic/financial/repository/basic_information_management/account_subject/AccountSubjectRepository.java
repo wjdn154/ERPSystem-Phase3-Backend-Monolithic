@@ -2,7 +2,7 @@ package com.megazone.ERPSystem_phase3_Monolithic.financial.repository.basic_info
 
 import com.megazone.ERPSystem_phase3_Monolithic.financial.model.basic_information_management.account_subject.AccountSubject;
 import com.megazone.ERPSystem_phase3_Monolithic.financial.model.basic_information_management.account_subject.dto.AccountSubjectSearchDTO;
-import com.querydsl.core.Tuple;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;

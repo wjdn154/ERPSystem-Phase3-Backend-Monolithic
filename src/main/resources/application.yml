@@ -2,38 +2,26 @@ spring:
   application:
     name: ERPSystem-phase3-Monolithic
   datasource:
+    hikari:
+      maximum-pool-size: 10
+      minimum-idle: 5
     writer:
       driver-class-name: com.mysql.cj.jdbc.Driver
-      hikari:
-        maximum-pool-size: 10
-        minimum-idle: 5
     reader:
       driver-class-name: com.mysql.cj.jdbc.Driver
-      hikari:
-        maximum-pool-size: 10
-        minimum-idle: 5
   jpa:
     hibernate:
-      ddl-auto: create-drop
-    #      ddl-auto: create-only
-    #    generate-ddl: true
-      naming:
-        physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
+      ddl-auto: none
     properties:
       hibernate:
         format_sql: true
-#        highlight_sql: true #신규
+        highlight_sql: true #신규
         dialect: org.hibernate.dialect.MySQLDialect
         multi-tenancy: SCHEMA # 멀티 테넌시 설정 (스키마 기반)
-#        use_sql_comments: true #신규
-#        show_sql: true; # 신규
-    #        tenant_identifier_resolver: com.megazone.ERPSystem_phase3_Monolithic.common.config.multi_tenant.SchemaBasedTenantIdentifierResolver
-#        multi_tenant_connection_provider: com.megazone.ERPSystem_phase3_Monolithic.common.config.multi_tenant.SchemaBasedMultiTenantConnectionProvider
-
-    #    show-sql: true # SQL 쿼리를 콘솔에 출력하도록 설정
+        tenant_identifier_resolver: com.megazone.ERPSystem_phase3_Monolithic.common.config.multi_tenant.SchemaBasedTenantIdentifierResolver
+        multi_tenant_connection_provider: com.megazone.ERPSystem_phase3_Monolithic.common.config.multi_tenant.SchemaBasedMultiTenantConnectionProvider
     show-sql: false # SQL 쿼리를 콘솔에 출력하도록 설정
     defer-datasource-initialization: true # 데이터베이스 초기화를 지연시켜, 스키마 생성 후 데이터 초기화가 이루어지도록 설정
-#    open-in-view: false # OpenEntityManagerInView 패턴 사용 여부 설정
   web:
     resources:
       static-locations:
@@ -44,10 +32,6 @@ spring:
         - 'file:src/main/frontend/dist/' # 정적 리소스 위치 지정 (파일 시스템 기준)
   flyway:
     enabled: false
-#    out-of-order: true
-#    baseline-on-migrate: true
-#    placeholders:
-#      log-file: "flyway-error.log"  # 로그 파일을 설정합니다.
 
   sql:
     init:
@@ -162,6 +146,5 @@ logging:
 #    org.flywaydb: DEBUG
 #    org.hibernate.boot.model.naming: TRACE # 신규
 #    org.hibernate.SQL: DEBUG
-#    org.hibernate.type.descriptor.sql: TRACE
   pattern:
     console: "%d{yyyy-MM-dd HH:mm:ss} %-5level %highlight(%-5level) %logger{36} - %msg%n"

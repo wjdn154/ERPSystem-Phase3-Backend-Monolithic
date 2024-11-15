@@ -22,36 +22,21 @@ public class DataSourceConfig {
 
     private final SecretManagerConfig secretManagerConfig;
 
-    @Bean(name = "writerDataSource")
-    @ConfigurationProperties(prefix = "spring.datasource.writer")
+    @Bean
     public DataSource writerDataSource() {
-        HikariDataSource dataSource = new HikariDataSource();
-
-        DatabaseCredentials writerCredentials = secretManagerConfig.getWriterSecret();
-        if (writerCredentials != null) {
-            dataSource.setJdbcUrl(writerCredentials.getUrl());
-            dataSource.setUsername(writerCredentials.getUsername());
-            dataSource.setPassword(writerCredentials.getPassword());
-        }
-
-        dataSource.setDriverClassName("com.mysql.cj.jdbc.Driver");
-        dataSource.setMaximumPoolSize(10);
-        dataSource.setMinimumIdle(5);
-
-        return dataSource;
+        return createDataSource(secretManagerConfig.getWriterSecret());
     }
 
-    @Bean(name = "readerDataSource")
-    @ConfigurationProperties(prefix = "spring.datasource.reader")
+    @Bean
     public DataSource readerDataSource() {
-        HikariDataSource dataSource = new HikariDataSource();
+        return createDataSource(secretManagerConfig.getReaderSecret());
+    }
 
-        DatabaseCredentials readerCredentials = secretManagerConfig.getReaderSecret();
-        if (readerCredentials != null) {
-            dataSource.setJdbcUrl(readerCredentials.getUrl());
-            dataSource.setUsername(readerCredentials.getUsername());
-            dataSource.setPassword(readerCredentials.getPassword());
-        }
+    private DataSource createDataSource(DatabaseCredentials credentials) {
+        HikariDataSource dataSource = new HikariDataSource();
+        dataSource.setJdbcUrl(credentials.getUrl());
+        dataSource.setUsername(credentials.getUsername());
+        dataSource.setPassword(credentials.getPassword());
         return dataSource;
     }
 
@@ -60,14 +45,20 @@ public class DataSourceConfig {
     public DataSource dynamicDataSource(
             @Qualifier("writerDataSource") DataSource writerDataSource,
             @Qualifier("readerDataSource") DataSource readerDataSource) {
-
         Map<Object, Object> dataSourceMap = new HashMap<>();
         dataSourceMap.put("writer", writerDataSource);
         dataSourceMap.put("reader", readerDataSource);
 
-        AbstractRoutingDataSource routingDataSource = new DynamicDataSource();
-        routingDataSource.setDefaultTargetDataSource(writerDataSource); // 기본 데이터소스: Writer
+        AbstractRoutingDataSource routingDataSource = new AbstractRoutingDataSource() {
+            @Override
+            protected Object determineCurrentLookupKey() {
+                return DataSourceContext.getCurrentDataSource();
+            }
+        };
+
+        routingDataSource.setDefaultTargetDataSource(writerDataSource);
         routingDataSource.setTargetDataSources(dataSourceMap);
+        routingDataSource.afterPropertiesSet();
 
         return routingDataSource;
     }

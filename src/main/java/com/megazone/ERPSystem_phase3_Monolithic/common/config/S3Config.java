@@ -28,44 +28,27 @@ import java.nio.file.Paths;
 public class S3Config {
 
     private static final String SECRET_NAME = "omz-env-secrets-backend";
+
+    private final SecretManagerConfig secretManagerConfig;
     private String awsRegion;
     private String bucketName;
 
+    @Autowired
+    public S3Config(SecretManagerConfig secretManagerConfig) {
+        this.secretManagerConfig = secretManagerConfig;
+    }
+
     @Bean
     public S3Client s3Client() {
-        String secretString = getSecretFromSecretsManager(SECRET_NAME);
-        return buildS3Client(secretString);
-    }
+        String accessKey = secretManagerConfig.getSecretValueFromJson(SECRET_NAME, "AWS_ACCESS_KEY_ID");
+        String secretKey = secretManagerConfig.getSecretValueFromJson(SECRET_NAME, "AWS_SECRET_ACCESS_KEY");
+        this.awsRegion = secretManagerConfig.getSecretValueFromJson(SECRET_NAME, "AWS_REGION");
+        this.bucketName = secretManagerConfig.getSecretValueFromJson(SECRET_NAME, "AWS_S3_BUCKET_NAME");
 
-    private String getSecretFromSecretsManager(String secretName) {
-        SecretsManagerClient client = SecretsManagerClient.builder().region(Region.of("ap-northeast-2")).build();
-        GetSecretValueRequest request = GetSecretValueRequest.builder()
-                .secretId(secretName)
+        return S3Client.builder()
+                .region(Region.of(awsRegion))
+                .credentialsProvider(StaticCredentialsProvider.create(
+                        AwsBasicCredentials.create(accessKey, secretKey)))
                 .build();
-        GetSecretValueResponse response = client.getSecretValue(request);
-        return response.secretString();
     }
-
-    private S3Client buildS3Client(String secretString) {
-        ObjectMapper mapper = new ObjectMapper();
-        try {
-            JsonNode node = mapper.readTree(secretString);
-
-            String accessKey = node.get("AWS_ACCESS_KEY_ID").asText();
-            String secretKey = node.get("AWS_SECRET_ACCESS_KEY").asText();
-            this.awsRegion = node.get("AWS_REGION").asText();
-            this.bucketName = node.get("AWS_S3_BUCKET_NAME").asText();
-            
-            return S3Client.builder()
-                    .region(Region.of(awsRegion))
-                    .credentialsProvider(StaticCredentialsProvider.create(
-                            AwsBasicCredentials.create(accessKey, secretKey)))
-                    .build();
-
-        } catch (Exception e) {
-            throw new RuntimeException("S3 자격 증명 파싱에 실패했습니다.", e);
-        }
-
-    }
-
 }

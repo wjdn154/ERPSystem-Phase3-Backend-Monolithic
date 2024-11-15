@@ -65,7 +65,7 @@ public class SecretManagerConfig {
     /**
      * Secrets Manager에서 특정 시크릿 이름과 키를 받아 JSON에서 값을 추출
      */
-    private String getSecretValueFromJson(String secretName, String key) {
+    public String getSecretValueFromJson(String secretName, String key) {
         try {
             GetSecretValueRequest getSecretValueRequest = GetSecretValueRequest.builder()
                     .secretId(secretName)

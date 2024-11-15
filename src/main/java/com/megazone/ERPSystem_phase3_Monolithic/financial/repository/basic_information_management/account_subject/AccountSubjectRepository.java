@@ -1,6 +1,7 @@
 package com.megazone.ERPSystem_phase3_Monolithic.financial.repository.basic_information_management.account_subject;
 
 import com.megazone.ERPSystem_phase3_Monolithic.financial.model.basic_information_management.account_subject.AccountSubject;
+import com.megazone.ERPSystem_phase3_Monolithic.financial.model.basic_information_management.account_subject.dto.AccountSubjectSearchDTO;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -28,6 +29,7 @@ public interface AccountSubjectRepository extends JpaRepository<AccountSubject, 
     @Query("SELECT a FROM account_subject a WHERE a.name LIKE %:name% OR a.code LIKE %:code% ORDER BY LENGTH(a.code), a.code ASC")
     List<AccountSubject> findByNameOrCodeContainingOrderByCodeAsc(@Param("name") String name, @Param("code") String code);
 
-    @Query("SELECT a FROM account_subject a ORDER BY LENGTH(a.code), a.code ASC")
-    List<AccountSubject> findAllByOrderByCodeAsc();
+    @Query("SELECT new com.megazone.ERPSystem_phase3_Monolithic.financial.model.basic_information_management.account_subject.dto.AccountSubjectSearchDTO(a.name, a.code) " +
+            "FROM account_subject a ORDER BY LENGTH(a.code), a.code ASC")
+    List<AccountSubjectSearchDTO> findAllByOrderByCodeAsc();
 }

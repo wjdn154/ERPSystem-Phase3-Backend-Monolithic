@@ -49,8 +49,8 @@ public class AccountSubjectController {
     }
 
     @PostMapping("/search")
-    public List<AccountSubjectDTO> searchAccountSubject(@RequestBody Map<String, String> searchText) {
-        return accountSubjectService.searchAccountSubject(searchText.get("searchText"));
+    public List<AccountSubjectSearchDTO> searchAccountSubject(@RequestBody Map<String, String> searchText) {
+        return accountSubjectService.searchAccountSubject();
     }
 
     /**

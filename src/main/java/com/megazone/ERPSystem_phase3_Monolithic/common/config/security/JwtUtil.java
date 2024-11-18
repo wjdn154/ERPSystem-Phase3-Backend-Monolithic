@@ -1,4 +1,5 @@
 package com.megazone.ERPSystem_phase3_Monolithic.common.config.security;
+import com.megazone.ERPSystem_phase3_Monolithic.common.config.SecretManagerConfig;
 import com.megazone.ERPSystem_phase3_Monolithic.financial.model.basic_information_management.company.Company;
 import com.megazone.ERPSystem_phase3_Monolithic.hr.model.basic_information_management.employee.Employee;
 import com.megazone.ERPSystem_phase3_Monolithic.hr.model.basic_information_management.employee.Permission;
@@ -22,14 +23,22 @@ import java.util.function.Function;
 @Component
 public class JwtUtil {
 
-    @Value("${jwt.secret}")
-    private String secret;  // JWT 서명에 사용되는 비밀키
+    private final String secret;
+    private final long expiration = 86400;
+    private final long refreshTokenExpiration = 604800;
 
-    @Value("${jwt.expiration}")
-    private long expiration;  // 토큰 만료 시간 (초 단위)
+    public JwtUtil(SecretManagerConfig secretManagerConfig) {
+        this.secret = secretManagerConfig.getJwtSecret();  // Secrets Manager에서 가져온 값을 주입
+    }
 
-    @Value("${jwt.refresh-expiration}")
-    private long refreshTokenExpiration;
+//    @Value("${jwt.secret}")
+//    private String secret;  // JWT 서명에 사용되는 비밀키
+//
+//    @Value("${jwt.expiration}")
+//    private long expiration;  // 토큰 만료 시간 (초 단위)
+//
+//    @Value("${jwt.refresh-expiration}")
+//    private long refreshTokenExpiration;
 
     /**
      * JWT 토큰에서 사용자 이름을 추출

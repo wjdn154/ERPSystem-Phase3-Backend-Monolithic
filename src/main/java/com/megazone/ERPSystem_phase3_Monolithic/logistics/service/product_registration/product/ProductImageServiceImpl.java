@@ -1,5 +1,6 @@
 package com.megazone.ERPSystem_phase3_Monolithic.logistics.service.product_registration.product;
 
+import com.megazone.ERPSystem_phase3_Monolithic.common.config.S3Config;
 import com.megazone.ERPSystem_phase3_Monolithic.logistics.model.product_registration.ProductImage;
 import com.megazone.ERPSystem_phase3_Monolithic.logistics.repository.product_registration.product.ProductImageRepository;
 import jakarta.transaction.Transactional;
@@ -24,16 +25,7 @@ public class ProductImageServiceImpl implements ProductImageService {
 
     private final S3Client s3Client;
     private final ProductImageRepository productImageRepository;
-
-    private String awsRegion = "ap-northeast-2";
-
-    private String bucketName = "rjsgh-bucket";
-
-//    @Value("${AWS_REGION}")
-//    private String awsRegion;
-//
-//    @Value("${AWS_S3_BUCKET_NAME}")
-//    private String bucketName;
+    private final S3Config s3Config;  // 동적으로 주입된 버킷 이름과 리전 사용
 
     @Override
     public String uploadProductImage(MultipartFile image) {
@@ -54,6 +46,15 @@ public class ProductImageServiceImpl implements ProductImageService {
     @Override
     public String saveImageToS3(MultipartFile image) throws IOException {
         String fileName = UUID.randomUUID().toString() + "_" + Paths.get(image.getOriginalFilename()).getFileName().toString();
+
+        // 동적으로 가져온 버킷 이름과 리전 사용
+        String bucketName = s3Config.getBucketName();  // S3Config에서 동적으로 주입된 버킷 이름 사용
+        String awsRegion = s3Config.getAwsRegion();    // S3Config에서 동적으로 주입된 리전 사용
+
+        // 로깅 추가
+        org.slf4j.LoggerFactory.getLogger(ProductImageServiceImpl.class).info("사용중인 bucket name: {}", bucketName);
+        org.slf4j.LoggerFactory.getLogger(ProductImageServiceImpl.class).info("사용중인 AWS region: {}", awsRegion);
+
 
         PutObjectRequest putObjectRequest = PutObjectRequest.builder()
                 .bucket(bucketName)

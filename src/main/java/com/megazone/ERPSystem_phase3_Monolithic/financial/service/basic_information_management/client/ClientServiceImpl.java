@@ -9,10 +9,7 @@ import com.megazone.ERPSystem_phase3_Monolithic.Integrated.repository.dashboard.
 import com.megazone.ERPSystem_phase3_Monolithic.Integrated.service.notification.NotificationService;
 import com.megazone.ERPSystem_phase3_Monolithic.financial.model.basic_information_management.account_subject.AccountSubject;
 import com.megazone.ERPSystem_phase3_Monolithic.financial.model.basic_information_management.client.*;
-import com.megazone.ERPSystem_phase3_Monolithic.financial.model.basic_information_management.client.dto.CategoryDTO;
-import com.megazone.ERPSystem_phase3_Monolithic.financial.model.basic_information_management.client.dto.ClientDTO;
-import com.megazone.ERPSystem_phase3_Monolithic.financial.model.basic_information_management.client.dto.LiquorDTO;
-import com.megazone.ERPSystem_phase3_Monolithic.financial.model.basic_information_management.client.dto.fetchClientListDTO;
+import com.megazone.ERPSystem_phase3_Monolithic.financial.model.basic_information_management.client.dto.*;
 import com.megazone.ERPSystem_phase3_Monolithic.financial.model.basic_information_management.client.enums.TransactionType;
 import com.megazone.ERPSystem_phase3_Monolithic.financial.model.common.Address;
 import com.megazone.ERPSystem_phase3_Monolithic.financial.model.common.Bank;
@@ -130,22 +127,14 @@ public class ClientServiceImpl implements ClientService {
     }
 
     @Override
-    public List<ClientDTO> searchClient(String searchText) {
-        List<Client> client;
-
-        if(searchText != null) {
-            client = clientRepository.findByPrintClientNameContaining(searchText);
-        }else {
-            client = clientRepository.findAll();
-        }
-
-        ModelMapper modelMapper = new ModelMapper();
-        return client.stream().map(c -> modelMapper.map(c, ClientDTO.class)).collect(Collectors.toList());
+    public ResponseEntity<Object> fetchClientList() {
+        List<fetchClientListDTO> client = clientRepository.fetchClientList();
+        return client.isEmpty() ? ResponseEntity.status(HttpStatus.BAD_REQUEST).body("거래처 데이터가 없습니다.") : ResponseEntity.ok(client);
     }
 
     @Override
-    public ResponseEntity<Object> fetchClientList() {
-        List<fetchClientListDTO> client = clientRepository.fetchClientList();
+    public ResponseEntity<Object> searchClientList() {
+        List<searchClientListDTO> client = clientRepository.searchClientList();
         return client.isEmpty() ? ResponseEntity.status(HttpStatus.BAD_REQUEST).body("거래처 데이터가 없습니다.") : ResponseEntity.ok(client);
     }
 

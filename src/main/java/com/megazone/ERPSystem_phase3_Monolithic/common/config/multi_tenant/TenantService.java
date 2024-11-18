@@ -3,20 +3,20 @@ package com.megazone.ERPSystem_phase3_Monolithic.common.config.multi_tenant;
 import jakarta.annotation.PostConstruct;
 import jakarta.persistence.EntityManagerFactory;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.flywaydb.core.Flyway;
 import org.hibernate.boot.MetadataSources;
 import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
 import org.hibernate.engine.spi.SessionFactoryImplementor;
 import org.hibernate.tool.hbm2ddl.SchemaExport;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.annotation.DependsOn;
+import org.springframework.context.event.EventListener;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 
-import javax.sql.DataSource;
 import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -24,22 +24,14 @@ import java.util.EnumSet;
 import java.util.List;
 import java.util.Set;
 
+@Slf4j
 @Service
-@DependsOn("dynamicDataSource")
+@RequiredArgsConstructor
 public class TenantService {
 
-    private JdbcTemplate jdbcTemplate;  // JDBC 연동을 위한 JdbcTemplate
-    private EntityManagerFactory entityManagerFactory;  // 엔티티 관리를 위한 EntityManagerFactory
-    private SqlInitProperties sqlInitProperties;  // SQL 초기화 프로퍼티
-
-    @Autowired
-    public TenantService(@Qualifier("dynamicDataSource") DataSource dataSource,
-                         EntityManagerFactory entityManagerFactory,
-                         SqlInitProperties sqlInitProperties) {
-        this.jdbcTemplate = new JdbcTemplate(dataSource);
-        this.entityManagerFactory = entityManagerFactory;
-        this.sqlInitProperties = sqlInitProperties;
-    }
+    private final JdbcTemplate jdbcTemplate;  // JDBC 연동을 위한 JdbcTemplate
+    private final EntityManagerFactory entityManagerFactory;  // 엔티티 관리를 위한 EntityManagerFactory
+    private final SqlInitProperties sqlInitProperties;  // SQL 초기화 프로퍼티
 
     /**
      * 애플리케이션 시작 시 스키마 및 테넌트 초기화 진행

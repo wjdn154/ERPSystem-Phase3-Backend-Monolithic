@@ -18,34 +18,6 @@ public class XRayTracingAspect {
     // 스레드 로컬로 메인 세그먼트 생성 여부를 확인
     private static final ThreadLocal<Boolean> mainSegmentCreated = ThreadLocal.withInitial(() -> false);
 
-    private final HttpServletRequest httpServletRequest;
-
-    // HttpServletRequest를 주입받기 위한 생성자
-    public XRayTracingAspect(HttpServletRequest httpServletRequest) {
-        this.httpServletRequest = httpServletRequest;
-    }
-
-    // HTTP 요청 트레이싱
-    @Around("within(@org.springframework.web.bind.annotation.RestController *)")
-    public Object traceHttpRequests(ProceedingJoinPoint joinPoint) throws Throwable {
-        String requestURI = httpServletRequest.getRequestURI(); // 요청 URI
-        String method = httpServletRequest.getMethod(); // HTTP 메서드 (GET, POST 등)
-
-        // HTTP 요청에 대한 메인 세그먼트 생성
-        Segment segment = AWSXRay.beginSegment("HTTP-" + method + " " + requestURI);
-
-        Object result;
-        try {
-            result = joinPoint.proceed(); // HTTP 요청 처리
-        } catch (Exception e) {
-            segment.addException(e); // 예외 기록
-            throw e;
-        } finally {
-            AWSXRay.endSegment(); // HTTP 요청 세그먼트 종료
-        }
-        return result;
-    }
-
     // 서비스 Layer 메소드 호출 전후로 메인 세그먼트 생성
     @Around("execution(* com.megazone.ERPSystem_phase3_Monolithic.financial.service..*(..)) || " +
             "execution(* com.megazone.ERPSystem_phase3_Monolithic.hr.service..*(..)) || " +

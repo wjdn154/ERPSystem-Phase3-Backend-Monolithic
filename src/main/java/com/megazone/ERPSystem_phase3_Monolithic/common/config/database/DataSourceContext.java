@@ -1,4 +1,4 @@
-package com.megazone.ERPSystem_phase3_Monolithic.database_config;
+package com.megazone.ERPSystem_phase3_Monolithic.common.config.database;
 
 public class DataSourceContext {
 

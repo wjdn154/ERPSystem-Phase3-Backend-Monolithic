@@ -1,4 +1,4 @@
-package com.megazone.ERPSystem_phase3_Monolithic.common.config;
+package com.megazone.ERPSystem_phase3_Monolithic.common.config.database;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

@@ -1,5 +1,6 @@
-package com.megazone.ERPSystem_phase3_Monolithic.database_config;
+package com.megazone.ERPSystem_phase3_Monolithic.common.config.aop;
 
+import com.megazone.ERPSystem_phase3_Monolithic.common.config.database.DataSourceContext;
 import org.aspectj.lang.annotation.After;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Before;
@@ -14,10 +15,10 @@ public class DataSourceRoutingAspect {
     public void setDataSource(Transactional transactional) {
         if (transactional.readOnly()) {
             DataSourceContext.setCurrentDataSource("reader"); // 읽기 전용 트랜잭션은 Reader로 설정
-            System.out.println("reader");
+            System.out.println("현재 트랜잭션 : reader");
         } else {
             DataSourceContext.setCurrentDataSource("writer"); // 쓰기 트랜잭션은 Writer로 설정
-            System.out.println("writer");
+            System.out.println("현재 트랜잭션 : writer");
         }
     }
 

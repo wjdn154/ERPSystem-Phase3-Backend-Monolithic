@@ -36,7 +36,6 @@ dependencies {
 	implementation("org.springframework.boot:spring-boot-starter-web") // 웹 스타터
 	implementation("org.springframework.boot:spring-boot-starter-data-jpa") // JPA 스타터
 	implementation("org.flywaydb:flyway-mysql") // Flyway
-	implementation("org.hibernate:hibernate-core:6.5.2.Final") // Hibernate Core
 	implementation("org.hibernate.tool:hibernate-tools-orm:6.5.2.Final")
 	implementation("org.hibernate.tool:hibernate-tools-utils:6.5.2.Final")
 

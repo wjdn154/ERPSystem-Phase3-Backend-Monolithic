@@ -11,11 +11,11 @@ public interface AccountSubjectService {
 
     Optional<Object> addMemoToAccountSubject (String accountSubjectCode, MemoRequestDTO memoRequestDTO);
 
+    List<AccountSubjectSearchDTO> searchAccountSubject();
+
     Optional<AccountSubjectDTO> updateAccountSubject(String code, AccountSubjectDTO dto);
 
     Optional<AccountSubjectDTO> saveAccountSubject(AccountSubjectDTO dto);
-
-    List<AccountSubjectSearchDTO> searchAccountSubject();
 
     void deleteAccount(String code);
 

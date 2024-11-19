@@ -4,67 +4,62 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.megazone.ERPSystem_phase3_Monolithic.common.config.database.DatabaseCredentials;
 import jakarta.annotation.PostConstruct;
+import jakarta.annotation.PreDestroy;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Configuration;
 import software.amazon.awssdk.services.secretsmanager.SecretsManagerClient;
 import software.amazon.awssdk.services.secretsmanager.model.GetSecretValueRequest;
 import software.amazon.awssdk.services.secretsmanager.model.GetSecretValueResponse;
 
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+
 @Slf4j
 @Configuration
 public class SecretManagerConfig {
 
     private SecretsManagerClient client;
-    private String jwtSecret;
-    private DatabaseCredentials writerCredentials;
-    private DatabaseCredentials readerCredentials;
+    private Map<String, CacheEntry> secretCache = new ConcurrentHashMap<>();
 
     @PostConstruct
     public void init() {
         this.client = SecretsManagerClient.builder().build();
     }
 
-    /**
-     * JWT Secret 가져오기
-     */
+    @PreDestroy
+    public void destroy() {
+        if (client != null) {
+            client.close();
+            log.info("SecretsManagerClient 리소스가 정상적으로 닫혔습니다.");
+        }
+    }
+
     public String getJwtSecret() {
-        if (jwtSecret == null) { // 캐싱되지 않았을 경우만 호출
-            jwtSecret = getSecretValueFromJson("omz-env-secrets-backend", "JWT_SECRET");
-        }
-        return jwtSecret;
+        return getCachedSecret("omz-env-secrets-backend", "JWT_SECRET");
     }
 
-    /**
-     * Writer DB 시크릿 가져오기
-     */
     public DatabaseCredentials getWriterSecret() {
-        if (writerCredentials == null) { // 캐싱되지 않았을 경우만 호출
-            writerCredentials = new DatabaseCredentials(
-                    getSecretValueFromJson("omz-env-secrets-backend", "RDS_WRITER_DB_URL"),
-                    getSecretValueFromJson("omz-env-secrets-backend", "RDS_DB_USER"),
-                    getSecretValueFromJson("omz-env-secrets-backend", "RDS_DB_PASSWORD")
-            );
-        }
-        return writerCredentials;
+        return new DatabaseCredentials(
+//                getCachedSecret("omz-env-secrets-backend", "RDS_WRITER_DB_URL"),
+//                getCachedSecret("omz-env-secrets-backend", "RDS_DB_USER"),
+//                getCachedSecret("omz-env-secrets-backend", "RDS_DB_PASSWORD")
+                    getSecretValueFromJson("omz-env-secrets-backend", "DB_URL"),
+                    getSecretValueFromJson("omz-env-secrets-backend", "DB_USER"),
+                    getSecretValueFromJson("omz-env-secrets-backend", "DB_PASSWORD")
+        );
     }
 
-    /**
-     * Reader DB 시크릿 가져오기
-     */
     public DatabaseCredentials getReaderSecret() {
-        if (readerCredentials == null) { // 캐싱되지 않았을 경우만 호출
-            readerCredentials = new DatabaseCredentials(
-                    getSecretValueFromJson("omz-env-secrets-backend", "RDS_READER_DB_URL"),
-                    getSecretValueFromJson("omz-env-secrets-backend", "RDS_DB_USER"),
-                    getSecretValueFromJson("omz-env-secrets-backend", "RDS_DB_PASSWORD")
-            );
-        }
-        return readerCredentials;
+        return new DatabaseCredentials(
+//                getCachedSecret("omz-env-secrets-backend", "RDS_READER_DB_URL"),
+//                getCachedSecret("omz-env-secrets-backend", "RDS_DB_USER"),
+//                getCachedSecret("omz-env-secrets-backend", "RDS_DB_PASSWORD")
+                    getSecretValueFromJson("omz-env-secrets-backend", "DB_URL"),
+                    getSecretValueFromJson("omz-env-secrets-backend", "DB_USER"),
+                    getSecretValueFromJson("omz-env-secrets-backend", "DB_PASSWORD")
+        );
     }
 
-    /**
-     * Secrets Manager에서 특정 시크릿 이름과 키를 받아 JSON에서 값을 추출
-     */
     public String getSecretValueFromJson(String secretName, String key) {
         try {
             GetSecretValueRequest getSecretValueRequest = GetSecretValueRequest.builder()
@@ -85,6 +80,33 @@ public class SecretManagerConfig {
         } catch (Exception e) {
             log.error("Secrets Manager에서 시크릿 '{}'의 키 '{}'를 찾지 못했습니다: {}", secretName, key, e.getMessage(), e);
             throw new RuntimeException("Secrets Manager 호출에 실패했습니다: " + secretName, e);
+        }
+    }
+
+    private String getCachedSecret(String secretName, String key) {
+        String cacheKey = secretName + ":" + key;
+        CacheEntry cacheEntry = secretCache.get(cacheKey);
+
+        if (cacheEntry != null && !cacheEntry.isExpired()) {
+            return cacheEntry.value;
+        }
+
+        String secretValue = getSecretValueFromJson(secretName, key);
+        secretCache.put(cacheKey, new CacheEntry(secretValue, System.currentTimeMillis() + 60000)); // 1분 TTL
+        return secretValue;
+    }
+
+    private static class CacheEntry {
+        String value;
+        long expireAt;
+
+        CacheEntry(String value, long expireAt) {
+            this.value = value;
+            this.expireAt = expireAt;
+        }
+
+        boolean isExpired() {
+            return System.currentTimeMillis() > expireAt;
         }
     }
 }

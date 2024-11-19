@@ -35,6 +35,7 @@ public class DataSourceConfig {
     private DataSource createDataSource(DatabaseCredentials credentials) {
         HikariDataSource dataSource = new HikariDataSource();
         dataSource.setJdbcUrl(credentials.getUrl());
+        System.out.println("credentials.getUrl() = " + credentials.getUrl());
         dataSource.setUsername(credentials.getUsername());
         dataSource.setPassword(credentials.getPassword());
         return dataSource;

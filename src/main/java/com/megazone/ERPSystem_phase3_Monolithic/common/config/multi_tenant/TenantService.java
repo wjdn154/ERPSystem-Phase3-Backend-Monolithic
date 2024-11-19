@@ -267,6 +267,7 @@ public class TenantService {
                 .schemas(tenantSchema)
                 .locations("filesystem:" + migrationDir.toAbsolutePath().toString())
                 .baselineOnMigrate(true)
+                .batch(true) // 배치 모드 활성화
                 .load();
 
         try {

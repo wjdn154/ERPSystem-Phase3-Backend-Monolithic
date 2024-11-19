@@ -88,7 +88,7 @@ dependencies {
 	testRuntimeOnly("org.junit.platform:junit-platform-launcher") // JUnit 플랫폼 런처
 
 	// MySQL JDBC 드라이버
-	runtimeOnly("mysql:mysql-connector-java:8.0.30") // MySQL 드라이버
+	implementation("mysql:mysql-connector-java:8.0.30") // MySQL 드라이버
 //	runtimeOnly ("mysql:mysql-connector-java")
 }
 

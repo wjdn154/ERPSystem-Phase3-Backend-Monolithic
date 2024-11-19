@@ -108,6 +108,8 @@ public class TenantService {
      */
     private void dropSchema(String schemaName) throws Exception {
         String dropSchemaSQL = "DROP SCHEMA IF EXISTS " + schemaName;
+        System.out.println("hong");
+        System.out.println(jdbcTemplate.getDataSource());
         jdbcTemplate.execute(dropSchemaSQL);
     }
 
@@ -119,6 +121,8 @@ public class TenantService {
      */
     private void createSchema(String schemaName) throws Exception {
         String createSchemaSQL = "CREATE SCHEMA IF NOT EXISTS " + schemaName;
+        System.out.println("hong2");
+        System.out.println(jdbcTemplate.getDataSource());
         jdbcTemplate.execute(createSchemaSQL);
     }
 

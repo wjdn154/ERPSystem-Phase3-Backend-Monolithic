@@ -3,11 +3,8 @@ spring:
     name: ERPSystem-phase3-Monolithic
   datasource:
     hikari:
-      maximum-pool-size: 10
-      minimum-idle: 5
-      idle-timeout: 30000 # 유휴 연결을 30초 후 종료
-      max-lifetime: 1800000 # 연결 수명을 30분으로 제한
-      leak-detection-threshold: 2000 # 2초 이상 반환되지 않는 연결 로그 출력
+      max-lifetime: 600000 # 10분
+      idle-timeout: 0      # 유휴 연결 관리를 RDS 프록시에 위임
     writer:
       driver-class-name: com.mysql.cj.jdbc.Driver
     reader:
@@ -92,7 +89,6 @@ spring:
         - classpath:initial-database/logistics/purchase_management/purchase_request.sql
         - classpath:initial-database/logistics/purchase_management/purchase_order.sql
         - classpath:initial-database/logistics/purchase_management/receiving_order.sql
-
         - classpath:initial-database/logistics/sales_management/shipping_order.sql
         - classpath:initial-database/logistics/sales_management/sale_plan.sql
         - classpath:initial-database/logistics/sales_management/quotation.sql
@@ -103,14 +99,12 @@ spring:
         - classpath:initial-database/production/basic_data/bom/standard_bom.sql
         - classpath:initial-database/production/basic_data/workcenter.sql
         - classpath:initial-database/production/production_schedule/common_scheduling/shift_type.sql
-
         - classpath:initial-database/production/resource_data/equipmentData.sql
         - classpath:initial-database/production/resource_data/maintenanceHistory.sql
         - classpath:initial-database/production/resource_data/worker.sql
         - classpath:initial-database/production/resource_data/materialData.sql
         - classpath:initial-database/production/resource_data/hazardousMaterial.sql
         - classpath:initial-database/production/basic_data/bom/bom_standard_bom_material.sql
-
         - classpath:initial-database/production/production_schedule/common_scheduling/production_request.sql
         - classpath:initial-database/production/production_schedule/plan_of_production/mps.sql
         - classpath:initial-database/production/production_schedule/common_scheduling/production_order.sql

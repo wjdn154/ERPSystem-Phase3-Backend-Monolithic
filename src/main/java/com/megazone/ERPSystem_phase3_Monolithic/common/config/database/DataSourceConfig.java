@@ -37,24 +37,23 @@ public class DataSourceConfig {
     }
 
     private DataSource createDataSource(DatabaseCredentials credentials) {
-//        HikariDataSource dataSource = new HikariDataSource();
-//        dataSource.setJdbcUrl(credentials.getUrl());
-//        System.out.println("credentials.getUrl() = " + credentials.getUrl());
-//        dataSource.setUsername(credentials.getUsername());
-//        dataSource.setPassword(credentials.getPassword());
-//        return dataSource;
-        try {
-            // Spring의 SimpleDriverDataSource 사용
-            SimpleDriverDataSource dataSource = new SimpleDriverDataSource();
-            dataSource.setDriverClass(com.mysql.cj.jdbc.Driver.class); // MySQL Driver 설정
-            dataSource.setUrl(credentials.getUrl());
-            dataSource.setUsername(credentials.getUsername());
-            dataSource.setPassword(credentials.getPassword());
-            return dataSource;
-        } catch (Exception e) {
-            log.error("Failed to create DataSource for URL: {}", credentials.getUrl(), e);
-            throw new RuntimeException("Failed to create DataSource", e);
-        }
+        HikariDataSource dataSource = new HikariDataSource();
+        dataSource.setJdbcUrl("jdbc:mysql://localhost:3306/PUBLIC?useSSL=false&serverTimezone=Asia/Seoul");
+        dataSource.setUsername("root");
+        dataSource.setPassword("1234");
+        return dataSource;
+//        try {
+//            // Spring의 SimpleDriverDataSource 사용
+//            SimpleDriverDataSource dataSource = new SimpleDriverDataSource();
+//            dataSource.setDriverClass(com.mysql.cj.jdbc.Driver.class); // MySQL Driver 설정
+//            dataSource.setUrl("jdbc:mysql://localhost:3306/PUBLIC?useSSL=false&serverTimezone=Asia/Seoul");
+//            dataSource.setUsername("root");
+//            dataSource.setPassword("1234");
+//            return dataSource;
+//        } catch (Exception e) {
+//            log.error("Failed to create DataSource for URL: {}", credentials.getUrl(), e);
+//            throw new RuntimeException("Failed to create DataSource", e);
+//        }
     }
 
     @Bean

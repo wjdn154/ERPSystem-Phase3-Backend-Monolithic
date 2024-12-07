@@ -43,7 +43,7 @@ import java.util.stream.Collectors;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/hr")
+@RequestMapping("/api/common")
 public class UsersController {
 
 

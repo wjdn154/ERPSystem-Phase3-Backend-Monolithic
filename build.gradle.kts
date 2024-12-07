@@ -90,6 +90,9 @@ dependencies {
 	// MySQL JDBC 드라이버
 	implementation("mysql:mysql-connector-java:8.0.30") // MySQL 드라이버
 //	runtimeOnly ("mysql:mysql-connector-java")
+
+	//cognito JWT 토큰 검증하기 위한 라이브러리
+	implementation("com.nimbusds:nimbus-jose-jwt:9.31")
 }
 
 // 소스 세트 설정: 생성된 QClass 파일을 메인 소스 디렉토리에 포함

@@ -33,4 +33,8 @@ public interface UsersService {
 
     ResponseEntity<Object> createRefreshToken(Map<String, String> refreshTokenRequest);
 
+    ResponseEntity<Object> googleCreateAuthentication(String email, String name,String tenantId, Long companyId);
+
+    ResponseEntity<String> googleRegisterUser(String email, String name, Long companyId) throws SQLException;
+
 }

@@ -32,7 +32,6 @@ public class Users {
     @Column(nullable = false, name = "user_name", unique = true)
     private String userName;
 
-    @Column(nullable = false)
     private String password; // 비밀번호
 
     @ManyToOne(fetch = FetchType.LAZY)

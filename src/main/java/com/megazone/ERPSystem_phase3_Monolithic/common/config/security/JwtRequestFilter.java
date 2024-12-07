@@ -20,6 +20,7 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.Map;
 
 /**
  * JwtRequestFilter 클래스
@@ -31,6 +32,8 @@ public class JwtRequestFilter extends OncePerRequestFilter {
 
     private final CustomUserDetailsService customUserDetailsService; // 사용자 인증 정보를 처리하는 서비스
     private final JwtUtil jwtUtil; // JWT 유틸리티 클래스
+    private final CognitoJWTVerifier cognitoJWTVerifier; // Cognito JWT 검증 클래스
+    private final UsersRepository usersRepository; // 사용자 레포지토리
 
     /**
      * 생성자
@@ -39,9 +42,11 @@ public class JwtRequestFilter extends OncePerRequestFilter {
      * @param jwtUtil JWT 유틸리티 클래스 주입
      */
     @Autowired
-    public JwtRequestFilter(CustomUserDetailsService customUserDetailsService, JwtUtil jwtUtil) {
+    public JwtRequestFilter(CustomUserDetailsService customUserDetailsService, JwtUtil jwtUtil, CognitoJWTVerifier cognitoJWTVerifier, UsersRepository usersRepository) {
         this.customUserDetailsService = customUserDetailsService;
         this.jwtUtil = jwtUtil;
+        this.cognitoJWTVerifier = cognitoJWTVerifier;
+        this.usersRepository = usersRepository;
     }
 
     /**
@@ -50,7 +55,7 @@ public class JwtRequestFilter extends OncePerRequestFilter {
      * @param request HTTP 요청 객체
      * @param response HTTP 응답 객체
      * @param chain 필터 체인
-     * @throws ServletException 서블릿 예외
+     * @throws ServletException 서블릿 예외0.
      * @throws IOException 입출력 예외
      */
     @Override
@@ -58,7 +63,8 @@ public class JwtRequestFilter extends OncePerRequestFilter {
             throws ServletException, IOException {
         // /auth 경로는 필터를 통과시킴
         String path = request.getRequestURI();
-        if (path.startsWith("/api/hr/auth/login")) {
+
+        if (path.startsWith("/api/hr/auth/login") || path.startsWith("/api/hr/auth/google-login")) {
             chain.doFilter(request, response);
             return;  // /auth 경로는 더 이상 필터 처리하지 않음
         }
@@ -66,14 +72,21 @@ public class JwtRequestFilter extends OncePerRequestFilter {
         // Authorization 헤더에서 JWT 토큰 추출
         final String authorizationHeader = request.getHeader("Authorization");
 
+        String email = null;
         String userName = null;
         String jwt = null;
 
         if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
             jwt = authorizationHeader.substring(7);  // "Bearer " 부분을 제거하고 토큰만 추출
             try {
-                userName = jwtUtil.extractUsername(jwt);  // JWT에서 사용자 ID 추출
-            } catch (ExpiredJwtException e) {
+                // Cognito JWT 검증 및 클레임 추출
+                Map<String, Object> claims = cognitoJWTVerifier.verifyAndDecodeJWT(jwt);
+                userName = (String)claims.get("userName");  // JWT에서 사용자 ID 추출
+                email = (String) claims.get("email");      // 이메일 클레임 추출
+                if (email == null || email.trim().isEmpty()) {
+                    throw new IllegalArgumentException("Email claim is missing in the token");
+                }
+            } catch (ExpiredJwtException e) {  //토큰이 만료된 경우
                 request.setAttribute("ExpiredJwtException", e);  // 예외를 request에 저장
                 chain.doFilter(request, response);  // 필터 체인을 계속 진행
                 return;

@@ -48,22 +48,22 @@ spring:
         - classpath:initial-database/financial/company/company_corporate_type.sql
         - classpath:initial-database/financial/company/company_representative.sql
         - classpath:initial-database/financial/company/company.sql
-        - classpath:initial-database/financial/account_subject/account_subject_structure.sql
-        - classpath:initial-database/financial/account_subject/account_subject_nature.sql
-        - classpath:initial-database/financial/account_subject/account_subject_Standard_financial_statement.sql
-        - classpath:initial-database/financial/account_subject/account_subject.sql
-        - classpath:initial-database/financial/account_subject/account_subject_cash_memo.sql
-        - classpath:initial-database/financial/account_subject/account_subject_fixed_memo.sql
-        - classpath:initial-database/financial/account_subject/account_subject_transfer_memo.sql
+#        - classpath:initial-database/financial/account_subject/account_subject_structure.sql
+#        - classpath:initial-database/financial/account_subject/account_subject_nature.sql
+#        - classpath:initial-database/financial/account_subject/account_subject_Standard_financial_statement.sql
+#        - classpath:initial-database/financial/account_subject/account_subject.sql
+#        - classpath:initial-database/financial/account_subject/account_subject_cash_memo.sql
+#        - classpath:initial-database/financial/account_subject/account_subject_fixed_memo.sql
+#        - classpath:initial-database/financial/account_subject/account_subject_transfer_memo.sql
         - classpath:initial-database/financial/common/financial_bank.sql
         - classpath:initial-database/financial/client/client_category.sql
         - classpath:initial-database/financial/bank_account/bank_account_type.sql
         - classpath:initial-database/financial/common/financial_address.sql
         - classpath:initial-database/financial/common/financial_bank_account.sql
         #        - classpath:initial-database/financial/credit_card/credit_card.sql
-        - classpath:initial-database/financial/vat_type.sql
-        - classpath:initial-database/financial/journal_entry_type_setup.sql
-        - classpath:initial-database/financial/journal_entry.sql
+#        - classpath:initial-database/financial/vat_type.sql
+#        - classpath:initial-database/financial/journal_entry_type_setup.sql
+#        - classpath:initial-database/financial/journal_entry.sql
 
 
         - classpath:initial-database/hr/employee.sql
@@ -81,64 +81,64 @@ spring:
         - classpath:initial-database/financial/client/client.sql
         - classpath:initial-database/hr/users.sql
 
-        - classpath:initial-database/production/basic_data/process_routing/process_details.sql
-        - classpath:initial-database/production/basic_data/process_routing/process_routing.sql
-        - classpath:initial-database/production/basic_data/process_routing/routing_step.sql
+#        - classpath:initial-database/production/basic_data/process_routing/process_details.sql
+#        - classpath:initial-database/production/basic_data/process_routing/process_routing.sql
+#        - classpath:initial-database/production/basic_data/process_routing/routing_step.sql
+#
+#        - classpath:initial-database/logistics/currency.sql
+#        - classpath:initial-database/logistics/product/product_group.sql
+#        - classpath:initial-database/logistics/product/product.sql
+#        - classpath:initial-database/logistics/warehouse/warehouse.sql
+#        - classpath:initial-database/logistics/purchase_management/purchase_request.sql
+#        - classpath:initial-database/logistics/purchase_management/purchase_order.sql
+#        - classpath:initial-database/logistics/purchase_management/receiving_order.sql
+#
+#        - classpath:initial-database/logistics/sales_management/shipping_order.sql
+#        - classpath:initial-database/logistics/sales_management/sale_plan.sql
+#        - classpath:initial-database/logistics/sales_management/quotation.sql
+#        - classpath:initial-database/logistics/sales_management/orders.sql
+#        - classpath:initial-database/logistics/sales_management/sale_plan_detail.sql
+#        - classpath:initial-database/logistics/sales_management/sale.sql
+#
+#        - classpath:initial-database/production/basic_data/bom/standard_bom.sql
+#        - classpath:initial-database/production/basic_data/workcenter.sql
+#        - classpath:initial-database/production/production_schedule/common_scheduling/shift_type.sql
+#
+#        - classpath:initial-database/production/resource_data/equipmentData.sql
+#        - classpath:initial-database/production/resource_data/maintenanceHistory.sql
+#        - classpath:initial-database/production/resource_data/worker.sql
+#        - classpath:initial-database/production/resource_data/materialData.sql
+#        - classpath:initial-database/production/resource_data/hazardousMaterial.sql
+#        - classpath:initial-database/production/basic_data/bom/bom_standard_bom_material.sql
+#
+#        - classpath:initial-database/production/production_schedule/common_scheduling/production_request.sql
+#        - classpath:initial-database/production/production_schedule/plan_of_production/mps.sql
+#        - classpath:initial-database/production/production_schedule/common_scheduling/production_order.sql
+#        - classpath:initial-database/production/work_report/work_performance.sql
+#        - classpath:initial-database/production/work_report/environmental_certification_assessment.sql
+#        - classpath:initial-database/production/production_schedule/common_scheduling/worker_assignment.sql
+#
+#        - classpath:initial-database/financial/unresolved_sale_and_purchase_voucher.sql
+#        - classpath:initial-database/financial/unresolved_voucher.sql
+#        - classpath:initial-database/financial/resolved_sale_and_purchase_voucher.sql
+#        - classpath:initial-database/financial/resolved_voucher.sql
 
-        - classpath:initial-database/logistics/currency.sql
-        - classpath:initial-database/logistics/product/product_group.sql
-        - classpath:initial-database/logistics/product/product.sql
-        - classpath:initial-database/logistics/warehouse/warehouse.sql
-        - classpath:initial-database/logistics/purchase_management/purchase_request.sql
-        - classpath:initial-database/logistics/purchase_management/purchase_order.sql
-        - classpath:initial-database/logistics/purchase_management/receiving_order.sql
-
-        - classpath:initial-database/logistics/sales_management/shipping_order.sql
-        - classpath:initial-database/logistics/sales_management/sale_plan.sql
-        - classpath:initial-database/logistics/sales_management/quotation.sql
-        - classpath:initial-database/logistics/sales_management/orders.sql
-        - classpath:initial-database/logistics/sales_management/sale_plan_detail.sql
-        - classpath:initial-database/logistics/sales_management/sale.sql
-
-        - classpath:initial-database/production/basic_data/bom/standard_bom.sql
-        - classpath:initial-database/production/basic_data/workcenter.sql
-        - classpath:initial-database/production/production_schedule/common_scheduling/shift_type.sql
-
-        - classpath:initial-database/production/resource_data/equipmentData.sql
-        - classpath:initial-database/production/resource_data/maintenanceHistory.sql
-        - classpath:initial-database/production/resource_data/worker.sql
-        - classpath:initial-database/production/resource_data/materialData.sql
-        - classpath:initial-database/production/resource_data/hazardousMaterial.sql
-        - classpath:initial-database/production/basic_data/bom/bom_standard_bom_material.sql
-
-        - classpath:initial-database/production/production_schedule/common_scheduling/production_request.sql
-        - classpath:initial-database/production/production_schedule/plan_of_production/mps.sql
-        - classpath:initial-database/production/production_schedule/common_scheduling/production_order.sql
-        - classpath:initial-database/production/work_report/work_performance.sql
-        - classpath:initial-database/production/work_report/environmental_certification_assessment.sql
-        - classpath:initial-database/production/production_schedule/common_scheduling/worker_assignment.sql
-
-        - classpath:initial-database/financial/unresolved_sale_and_purchase_voucher.sql
-        - classpath:initial-database/financial/unresolved_voucher.sql
-        - classpath:initial-database/financial/resolved_sale_and_purchase_voucher.sql
-        - classpath:initial-database/financial/resolved_voucher.sql
-
-        - classpath:initial-database/hr/payment/employee_allowance.sql
-        - classpath:initial-database/hr/payment/employee_salary_step.sql
-        - classpath:initial-database/hr/payment/employee_position_salary_step.sql
-        - classpath:initial-database/hr/payment/position_salary_step_allowance.sql
-
-        - classpath:initial-database/hr/payment/employment_insurance_pension.sql
-        - classpath:initial-database/hr/payment/health_insurance_pension.sql
-        - classpath:initial-database/hr/payment/national_pension.sql
-        - classpath:initial-database/hr/payment/long_term_care_insurance_pension.sql
-        - classpath:initial-database/hr/payment/salary_ledger_date.sql
-        - classpath:initial-database/hr/payment/employee_income_tax.sql
-        - classpath:initial-database/hr/payment/salary_ledger.sql
-        - classpath:initial-database/hr/payment/salary_ledger_allowance.sql
-        - classpath:initial-database/logistics/purchase_management/purchase.sql
-
-        - classpath:initial-database/hr/payment/salary.sql
+#        - classpath:initial-database/hr/payment/employee_allowance.sql
+#        - classpath:initial-database/hr/payment/employee_salary_step.sql
+#        - classpath:initial-database/hr/payment/employee_position_salary_step.sql
+#        - classpath:initial-database/hr/payment/position_salary_step_allowance.sql
+#
+#        - classpath:initial-database/hr/payment/employment_insurance_pension.sql
+#        - classpath:initial-database/hr/payment/health_insurance_pension.sql
+#        - classpath:initial-database/hr/payment/national_pension.sql
+#        - classpath:initial-database/hr/payment/long_term_care_insurance_pension.sql
+#        - classpath:initial-database/hr/payment/salary_ledger_date.sql
+#        - classpath:initial-database/hr/payment/employee_income_tax.sql
+#        - classpath:initial-database/hr/payment/salary_ledger.sql
+#        - classpath:initial-database/hr/payment/salary_ledger_allowance.sql
+#        - classpath:initial-database/logistics/purchase_management/purchase.sql
+#
+#        - classpath:initial-database/hr/payment/salary.sql
 
 
 logging:

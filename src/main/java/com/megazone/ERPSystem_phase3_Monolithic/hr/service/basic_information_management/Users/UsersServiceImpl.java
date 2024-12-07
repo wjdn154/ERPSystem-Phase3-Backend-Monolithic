@@ -35,6 +35,7 @@ import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+//import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
@@ -66,7 +67,47 @@ public class UsersServiceImpl implements UsersService{
     private final RecentActivityRepository recentActivityRepository;
     private final NotificationService notificationService;
 
+    //google-login 정보 반환
+    @Override
+    public ResponseEntity<Object> googleCreateAuthentication(String email, String name, String tenantId, Long companyId) {
+        // 이메일 형식 검증 정규식
+        Pattern pattern = Pattern.compile("^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+$");
 
+        // 이메일 형식 검증
+        if (!pattern.matcher(email).matches()) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("잘못된 이메일 형식입니다.");
+        }
+
+        // 사용자 정보 가져오기
+        Users user = usersRepository.findByUserName(email).orElseThrow(() -> new UsernameNotFoundException("사용자를 찾을 수 없습니다."));
+        if (user.getCompany() == null) {
+            user.setCompany(companyRepository.findById(companyId).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "회사 정보를 찾을 수 없습니다.")));
+            usersRepository.save(user);
+        }
+
+        System.out.println("user: "+user.getUserName()+user.getUserNickname()+user.getPassword());
+        // 비밀번호가 없으면 인증 건너뛰기
+        if (user.getPassword() == null || user.getPassword().isEmpty()) {
+            System.out.println("비밀번호 없음: 신규 사용자 비밀번호 인증 건너뜁니다.");
+            // 사용자 정보 반환
+            return ResponseEntity.ok(new CustomUserDetails(user));
+        }
+
+        try {
+            // 사용자 인증
+            authenticationManager.authenticate(
+                    new UsernamePasswordAuthenticationToken(email, user.getPassword())
+            );
+        } catch (BadCredentialsException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("로그인 정보가 올바르지 않습니다.");
+        }
+
+        // Users를 CustomUserDetails로 변환
+        UserDetails userDetails = new CustomUserDetails(user);
+
+        return ResponseEntity.ok(userDetails);
+    }
+    
     @Override
     public ResponseEntity<Object> createAuthenticationToken(AuthRequest authRequest, String tenantId) {
         // 이메일 형식 검증 정규식
@@ -101,6 +142,7 @@ public class UsersServiceImpl implements UsersService{
                 user.getCompany().getId(), user.getEmployee().getId(), user.getPermission().getId());
 
         return ResponseEntity.ok(jwtToken);
+        //return null;
     }
 
     @Override
@@ -121,6 +163,38 @@ public class UsersServiceImpl implements UsersService{
         response.put("token", jwtToken);
 
         return ResponseEntity.ok(response);
+        //return null;
+    }
+
+    //구글 회원가입
+    @Override
+    public ResponseEntity<String> googleRegisterUser(String email,String name, Long CompanyId) throws SQLException {
+
+        // 이메일 형식 검증 정규식
+        Pattern pattern = Pattern.compile("^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+$");
+
+        // 이메일 형식 검증
+        if (!pattern.matcher(email).matches()) return ResponseEntity.badRequest().body("잘못된 이메일 형식입니다.");
+
+        // 유저 검증
+        if (usersRepository.findByUserName(email).isPresent()) return ResponseEntity.badRequest().body("이미 존재하는 사용자입니다.");
+        Employee employee = employeeRepository.findByEmail(email).orElse(null);
+        if(employee == null) return ResponseEntity.badRequest().body("사원 정보를 찾을 수 없습니다.");
+
+        // 테넌트 스키마에 저장할 사용자 생성
+        Users tenantUser = new Users();
+        tenantUser.setUserName(email);
+        tenantUser.setPassword(null);
+        tenantUser.setPermission(new Permission());
+        tenantUser.setCompany(companyRepository.findById(CompanyId)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "회사 정보를 찾을 수 없습니다.")));
+        tenantUser.setEmployee(employee);
+        tenantUser.setUserNickname(name);
+
+        usersRepository.save(tenantUser);
+        usersRepository.flush();
+        System.out.println("저장된 사용자 : "+ tenantUser.getId()+tenantUser.getUserName()+tenantUser.getUserNickname());
+        return ResponseEntity.ok("사용자 등록 완료 - 테넌트: tenant_" + CompanyId);
     }
 
     @Override
@@ -136,6 +210,7 @@ public class UsersServiceImpl implements UsersService{
         if (usersRepository.findByUserName(authRequest.getUserName()).isPresent()) return ResponseEntity.badRequest().body("이미 존재하는 사용자입니다.");
 
         Employee employee = employeeRepository.findByEmail(authRequest.getUserName()).orElse(null);
+
         if(employee == null) return ResponseEntity.badRequest().body("사원 정보를 찾을 수 없습니다.");
 
         // 테넌트 스키마에 저장할 사용자 생성

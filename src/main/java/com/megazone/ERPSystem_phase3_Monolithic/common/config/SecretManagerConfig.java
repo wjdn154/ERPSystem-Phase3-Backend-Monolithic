@@ -39,25 +39,27 @@ public class SecretManagerConfig {
     }
 
     public DatabaseCredentials getWriterSecret() {
-        return new DatabaseCredentials(
-                getCachedSecret("omz-env-secrets-backend", "RDS_WRITER_DB_URL"),
-                getCachedSecret("omz-env-secrets-backend", "RDS_DB_USER"),
-                getCachedSecret("omz-env-secrets-backend", "RDS_DB_PASSWORD")
+//        return new DatabaseCredentials(
+//                getCachedSecret("omz-env-secrets-backend", "RDS_WRITER_DB_URL"),
+//                getCachedSecret("omz-env-secrets-backend", "RDS_DB_USER"),
+//                getCachedSecret("omz-env-secrets-backend", "RDS_DB_PASSWORD")
 //                    getSecretValueFromJson("omz-env-secrets-backend", "DB_URL"),
 //                    getSecretValueFromJson("omz-env-secrets-backend", "DB_USER"),
 //                    getSecretValueFromJson("omz-env-secrets-backend", "DB_PASSWORD")
-        );
+//        );
+                return null;
     }
 
     public DatabaseCredentials getReaderSecret() {
-        return new DatabaseCredentials(
-                getCachedSecret("omz-env-secrets-backend", "RDS_READER_DB_URL"),
-                getCachedSecret("omz-env-secrets-backend", "RDS_DB_USER"),
-                getCachedSecret("omz-env-secrets-backend", "RDS_DB_PASSWORD")
-//                    getSecretValueFromJson("omz-env-secrets-backend", "DB_URL"),
-//                    getSecretValueFromJson("omz-env-secrets-backend", "DB_USER"),
-//                    getSecretValueFromJson("omz-env-secrets-backend", "DB_PASSWORD")
-        );
+//        return new DatabaseCredentials(
+//                getCachedSecret("omz-env-secrets-backend", "RDS_READER_DB_URL"),
+//                getCachedSecret("omz-env-secrets-backend", "RDS_DB_USER"),
+//                getCachedSecret("omz-env-secrets-backend", "RDS_DB_PASSWORD")
+////                    getSecretValueFromJson("omz-env-secrets-backend", "DB_URL"),
+////                    getSecretValueFromJson("omz-env-secrets-backend", "DB_USER"),
+////                    getSecretValueFromJson("omz-env-secrets-backend", "DB_PASSWORD")
+//        );
+        return null;
     }
 
     public String getSecretValueFromJson(String secretName, String key) {

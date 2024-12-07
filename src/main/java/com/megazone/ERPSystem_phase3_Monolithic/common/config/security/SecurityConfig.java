@@ -62,6 +62,7 @@ public class SecurityConfig {
                         .requestMatchers("/api/hr/auth/**").permitAll()
                         .requestMatchers("/api/financial/company/**").permitAll()
                         .requestMatchers("/api/notifications/subscribe").permitAll()
+                        .requestMatchers("/api/hr/auth/google-login").permitAll()
                         .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
                         .anyRequest().authenticated()
                 )

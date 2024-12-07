@@ -69,10 +69,10 @@ INSERT INTO employee_bank_account (bank_id,account_number) VALUES
 
 INSERT INTO employee (registration_Number, hire_date,is_household_head, department_id, job_title_id, position_id, bank_account_id ,address, email, employee_number, first_name, last_name, phone_number, profile_picture, employment_status, employment_type)
 VALUES
-('900101-1234567', '2022-01-01' ,TRUE, 3, 2, 3, 1,'거제', 'wkdgywjd77@naver.com', '220101001', '정현', '박', '010-2234-5678', 'https://rjsgh-bucket.s3.ap-northeast-2.amazonaws.com/f0abd1ee-bc28-41a4-bc50-6d3ee3d5d820_박정현.png', 'RESIGNED', 'FREELANCE'),
+('900101-1234567', '2022-01-01' ,TRUE, 3, 2, 3, 1,'거제', 'wkdgywjd77@gmail.com', '220101001', '정현', '박', '010-2234-5678', 'https://rjsgh-bucket.s3.ap-northeast-2.amazonaws.com/f0abd1ee-bc28-41a4-bc50-6d3ee3d5d820_박정현.png', 'RESIGNED', 'FREELANCE'),
 ('880215-2345678', '2022-02-01',TRUE, 3, 2, 3, 2,'서울', 'readyoun@omz.com', '220201001', '희연', '임', '010-2234-5678', 'https://rjsgh-bucket.s3.ap-northeast-2.amazonaws.com/a027509b-d595-4c67-baeb-cf2e8e161e39_임희연.png', 'ON_LEAVE', 'PART_TIME'),
 ('950505-3456789', '2022-03-01' ,TRUE, 2, 1, 1, 3,'경기', 'gj1563@naver.com', '220301001', '건호', '허', '010-1234-5678', 'https://rjsgh-bucket.s3.ap-northeast-2.amazonaws.com/b0c8319c-bf31-4fe5-8a37-cdb19c3bcef1_허건호.png', 'ACTIVE', 'FULL_TIME'),
-('780630-4567890', '2022-04-01',FALSE, 1, 2, 2, 4,'부산', 'ckacl2512@naver.com', '220401001', '민성', '김', '010-9876-5432', 'https://rjsgh-bucket.s3.ap-northeast-2.amazonaws.com/75eac5d4-0bac-4988-925d-b75dfc46804e_김민성.png', 'ACTIVE', 'CONTRACT'),
+('780630-4567890', '2022-04-01',FALSE, 1, 2, 2, 4,'부산', 'k3239361@gmail.com', '220401001', '민성', '김', '010-9876-5432', 'https://rjsgh-bucket.s3.ap-northeast-2.amazonaws.com/75eac5d4-0bac-4988-925d-b75dfc46804e_김민성.png', 'ACTIVE', 'CONTRACT'),
 ('820312-5678901', '2022-05-01' ,TRUE, 2, 1, 1, 5,'대구', 'hshdla@naver.com', '220501001', '홍스', '홍', '010-2234-5678', 'https://rjsgh-bucket.s3.ap-northeast-2.amazonaws.com/a3236e77-e6cf-404e-aafd-80c32c71f48d_홍성화.png', 'ON_LEAVE', 'PART_TIME'),
 ('860910-6789012', '2022-06-01' ,TRUE, 4, 1, 2, 6,'울산', 'chlwlgur0407@naver.com', '220601001', '지혁', '최', '010-2234-5678', 'https://rjsgh-bucket.s3.ap-northeast-2.amazonaws.com/206e6825-a455-432b-8a35-df175a8fc741_최지혁.png', 'ACTIVE', 'TEMPORARY'),
 ('921224-7890123', '2022-07-01' ,TRUE, 4, 3, 1, 7,'제주', 'cksals@naver.com', '220701001', '찬민', '김', '010-2234-5678', 'https://rjsgh-bucket.s3.ap-northeast-2.amazonaws.com/f60821ee-b5bc-4e9b-bbc5-a12f4213c838_김찬민.png', 'ACTIVE', 'INTERN'),

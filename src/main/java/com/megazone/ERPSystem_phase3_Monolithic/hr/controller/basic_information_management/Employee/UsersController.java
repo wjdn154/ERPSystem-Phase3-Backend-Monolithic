@@ -5,13 +5,16 @@ import com.megazone.ERPSystem_phase3_Monolithic.common.config.multi_tenant.Tenan
 import com.megazone.ERPSystem_phase3_Monolithic.common.config.multi_tenant.TenantService;
 import com.megazone.ERPSystem_phase3_Monolithic.common.config.security.AuthRequest;
 import com.megazone.ERPSystem_phase3_Monolithic.common.config.security.CustomUserDetails;
+import com.megazone.ERPSystem_phase3_Monolithic.common.config.security.GoogleLoginRequest;
 import com.megazone.ERPSystem_phase3_Monolithic.common.config.security.JwtUtil;
 import com.megazone.ERPSystem_phase3_Monolithic.financial.model.basic_information_management.company.Company;
 import com.megazone.ERPSystem_phase3_Monolithic.financial.model.basic_information_management.company.dto.*;
 import com.megazone.ERPSystem_phase3_Monolithic.financial.repository.basic_information_management.company.CompanyRepository;
+import com.megazone.ERPSystem_phase3_Monolithic.hr.model.basic_information_management.employee.Employee;
 import com.megazone.ERPSystem_phase3_Monolithic.hr.model.basic_information_management.employee.Permission;
 import com.megazone.ERPSystem_phase3_Monolithic.hr.model.basic_information_management.employee.Users;
 import com.megazone.ERPSystem_phase3_Monolithic.hr.model.basic_information_management.employee.dto.*;
+import com.megazone.ERPSystem_phase3_Monolithic.hr.repository.basic_information_management.Employee.EmployeeRepository;
 import com.megazone.ERPSystem_phase3_Monolithic.hr.repository.basic_information_management.Permission.PermissionRepository;
 import com.megazone.ERPSystem_phase3_Monolithic.hr.repository.basic_information_management.Users.UsersRepository;
 import com.megazone.ERPSystem_phase3_Monolithic.hr.service.basic_information_management.Users.UsersService;
@@ -32,6 +35,7 @@ import org.springframework.transaction.TransactionStatus;
 import org.springframework.transaction.support.DefaultTransactionDefinition;
 import org.springframework.web.bind.annotation.*;
 import org.hibernate.tool.schema.internal.SchemaCreatorImpl;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.sql.SQLException;
 import java.util.*;
@@ -48,7 +52,7 @@ public class UsersController {
     private final UsersRepository usersRepository;
     private final PermissionRepository permissionRepository;
     private final CompanyRepository companyRepository;
-
+    private final EmployeeRepository employeeRepository;
 
     private final JwtUtil jwtUtil;
     private final AuthenticationManager authenticationManager;
@@ -56,6 +60,60 @@ public class UsersController {
     private final EntityManager entityManager;
     private final SchemaBasedMultiTenantConnectionProvider multiTenantConnectionProvider;
     private final PlatformTransactionManager transactionManager;
+
+
+
+    // 구글 로그인 (토큰 생성 없이 정보만 반환)
+    @PostMapping("/auth/google-login")
+    public ResponseEntity<Object> googleLogin(@RequestBody GoogleLoginRequest request) {
+        try {
+            // 1. 구글 ID 토큰 검증 및 이메일 추출
+            String email = jwtUtil.verifyGoogleIdToken(request.getGoogleIdToken());
+            if (email == null) {
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("유효하지 않은 구글 토큰입니다.");
+            }
+
+            System.out.println("Received googleIdToken: " + request.getGoogleIdToken());
+            System.out.println("Decoded email from token: " + email);
+            // 2. 사용자 정보 가져오기 (이메일로 조회)
+            Users user = usersRepository.findByUserName(email).orElse(null);
+
+            // 3. 사용자 생성 (필요시)
+            if (user == null) {
+                Employee employee = employeeRepository.findByEmail(email)
+                        .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "사원 정보를 찾을 수 없습니다."));
+
+                user = new Users();
+                user.setUserName(email);
+                user.setUserNickname(employee.getFirstName() + " " + employee.getLastName());
+                user.setEmployee(employee);
+                user.setCompany(companyRepository.findById(request.getCompanyId())
+                        .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "회사 정보를 찾을 수 없습니다.")));
+                user.setPermission(new Permission()); // 기본 권한 설정
+                System.out.println("Retrieved company: " + request.getCompanyId());
+                usersRepository.save(user);
+            }
+
+            // 4. 회사 정보 검증
+            Company company = companyRepository.findById(request.getCompanyId())
+                    .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "회사를 찾을 수 없습니다."));
+
+            // 5. 응답 생성 (JWT 없이 필요한 정보만 반환)
+            Map<Object, Object> response = new HashMap<>();
+            response.put("email", user.getUserName());
+            response.put("nickname", user.getUserNickname());
+            response.put("companyId", user.getCompany().getId());
+            response.put("employeeId", user.getEmployee().getId());
+            response.put("permission", user.getPermission());
+            response.put("isAdmin", company.getAdminUsername().equals(user.getUserName()));
+
+            return ResponseEntity.ok(response);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("구글 로그인 처리 중 오류 발생");
+        }
+    }
+
 
 
 

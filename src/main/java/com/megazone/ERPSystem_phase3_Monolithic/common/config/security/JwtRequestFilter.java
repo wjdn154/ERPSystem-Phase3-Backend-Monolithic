@@ -58,13 +58,15 @@ public class JwtRequestFilter extends OncePerRequestFilter {
             throws ServletException, IOException {
         // /auth 경로는 필터를 통과시킴
         String path = request.getRequestURI();
-        if (path.startsWith("/api/hr/auth/login")) {
+        if (path.startsWith("/api/hr/auth/")) {
             chain.doFilter(request, response);
             return;  // /auth 경로는 더 이상 필터 처리하지 않음
         }
 
         // Authorization 헤더에서 JWT 토큰 추출
         final String authorizationHeader = request.getHeader("Authorization");
+        System.out.println("Authorization Header: " + authorizationHeader);
+
 
         String userName = null;
         String jwt = null;
@@ -75,7 +77,7 @@ public class JwtRequestFilter extends OncePerRequestFilter {
                 userName = jwtUtil.extractUsername(jwt);  // JWT에서 사용자 ID 추출
             } catch (ExpiredJwtException e) {
                 request.setAttribute("ExpiredJwtException", e);  // 예외를 request에 저장
-                chain.doFilter(request, response);  // 필터 체인을 계속 진행
+                response.getWriter().write("JWT Token has expired");
                 return;
             } catch (Exception e) {
                 e.printStackTrace();

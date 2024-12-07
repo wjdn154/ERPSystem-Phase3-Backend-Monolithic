@@ -1,15 +1,16 @@
 package com.megazone.ERPSystem_phase3_Monolithic.common.config.security;
+import com.google.api.client.googleapis.auth.oauth2.GoogleIdToken;
+import com.google.api.client.googleapis.auth.oauth2.GoogleIdTokenVerifier;
+import com.google.api.client.http.javanet.NetHttpTransport;
 import com.megazone.ERPSystem_phase3_Monolithic.common.config.SecretManagerConfig;
-import com.megazone.ERPSystem_phase3_Monolithic.financial.model.basic_information_management.company.Company;
-import com.megazone.ERPSystem_phase3_Monolithic.hr.model.basic_information_management.employee.Employee;
-import com.megazone.ERPSystem_phase3_Monolithic.hr.model.basic_information_management.employee.Permission;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import jakarta.servlet.http.HttpServletRequest;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
+import com.google.api.client.json.jackson2.JacksonFactory;
 
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -22,30 +23,52 @@ import java.util.function.Function;
  */
 @Component
 public class JwtUtil {
-
     private final String secret;
-    private final long expiration = 86400;
-    private final long refreshTokenExpiration = 604800;
+    private final long expiration = 86400; // JWT 만료 시간 (초)
+    private final long refreshTokenExpiration = 604800; // 리프레시 토큰 만료 시간 (초)
 
     public JwtUtil(SecretManagerConfig secretManagerConfig) {
-        this.secret = secretManagerConfig.getJwtSecret();  // Secrets Manager에서 가져온 값을 주입
+        this.secret = secretManagerConfig.getJwtSecret(); // Secrets Manager에서 가져온 값을 주입
     }
 
-//    @Value("${jwt.secret}")
-//    private String secret;  // JWT 서명에 사용되는 비밀키
-//
-//    @Value("${jwt.expiration}")
-//    private long expiration;  // 토큰 만료 시간 (초 단위)
-//
-//    @Value("${jwt.refresh-expiration}")
-//    private long refreshTokenExpiration;
-
     /**
-     * JWT 토큰에서 사용자 이름을 추출
+     * Google ID Token 검증
      *
-     * @param token JWT 토큰
-     * @return 사용자 이름
+     * @param idToken Google OAuth에서 전달받은 ID Token
+     * @return 검증된 이메일 주소 (유효하지 않을 경우 null 반환)
      */
+    public String verifyGoogleIdToken(String idToken) {
+        try {
+            GoogleIdTokenVerifier verifier = new GoogleIdTokenVerifier.Builder(
+                    new NetHttpTransport(), new JacksonFactory())
+                    .setAudience(Collections.singletonList("189901934577-ir0en4b9eqe4j6ehb6imcou61t2ec9mn.apps.googleusercontent.com")) // Google 클라이언트 ID
+                    .build();
+
+            System.out.println("Google ID Token: " + idToken);
+            System.out.println("Google ID Token Parts: " + idToken.split("\\.").length);
+            System.out.println("Google ID Token Header: " + idToken.split("\\.")[0]);
+            System.out.println("Google ID Token Payload: " + idToken.split("\\.")[1]);
+
+            GoogleIdToken googleIdToken = verifier.verify(idToken);
+
+            if (googleIdToken != null) {
+                GoogleIdToken.Payload payload = googleIdToken.getPayload();
+                System.out.println("Email: " + payload.getEmail());
+                System.out.println("Audience: " + payload.getAudience());
+                System.out.println("Issuer: " + payload.getIssuer());
+                System.out.println("Expiration: " + payload.getExpirationTimeSeconds());
+
+                // 검증 성공 시 이메일 반환
+                return payload.getEmail();
+            } else {
+                System.out.println("구글 ID 토큰 검증 실패");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            System.out.println("구글 토큰 검증 중 예외 발생: " + e.getMessage());
+        }
+        return null; // 검증 실패 시 null 반환
+    }
     public String extractUsername(String token) {
         return extractClaim(token, Claims::getSubject);
     }
@@ -191,5 +214,4 @@ public class JwtUtil {
     public Boolean validateRefreshToken(String token) {
         return !isTokenExpired(token);  // 리프레시 토큰은 만료 여부만 확인
     }
-
 }

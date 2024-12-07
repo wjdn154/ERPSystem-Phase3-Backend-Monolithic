@@ -90,6 +90,18 @@ dependencies {
 	// MySQL JDBC 드라이버
 	runtimeOnly("mysql:mysql-connector-java:8.0.30") // MySQL 드라이버
 //	runtimeOnly ("mysql:mysql-connector-java")
+
+	//google api client 라이브러리
+	implementation("com.google.api-client:google-api-client:1.33.0")
+	implementation("com.google.oauth-client:google-oauth-client-jetty:1.33.3")
+	implementation("com.google.http-client:google-http-client-gson:1.40.1")
+	implementation("com.google.http-client:google-http-client-jackson2:1.41.0")
+
+	// cognito
+	implementation ("com.auth0:java-jwt:4.4.0")
+	implementation ("org.apache.httpcomponents.client5:httpclient5:5.2")
+
+
 }
 
 // 소스 세트 설정: 생성된 QClass 파일을 메인 소스 디렉토리에 포함

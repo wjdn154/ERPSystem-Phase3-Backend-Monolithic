@@ -40,23 +40,26 @@ public class SecretManagerConfig {
 
     public DatabaseCredentials getWriterSecret() {
         return new DatabaseCredentials(
-                getCachedSecret("omz-env-secrets-backend", "RDS_WRITER_DB_URL"),
-                getCachedSecret("omz-env-secrets-backend", "RDS_DB_USER"),
-                getCachedSecret("omz-env-secrets-backend", "RDS_DB_PASSWORD")
-//                    getSecretValueFromJson("omz-env-secrets-backend", "RDS_WRITER_DB_LOCAL_URL"),
-//                    getSecretValueFromJson("omz-env-secrets-backend", "DB_USER"),
-//                    getSecretValueFromJson("omz-env-secrets-backend", "DB_PASSWORD")
+//                getCachedSecret("omz-env-secrets-backend", "RDS_MONO_WRITER_DB_URL"),
+//                getCachedSecret("omz-env-secrets-backend", "RDS_DB_USER"),
+//                getCachedSecret("omz-env-secrets-backend", "RDS_DB_PASSWORD")
+////                    getSecretValueFromJson("omz-env-secrets-backend", "RDS_WRITER_DB_LOCAL_URL"),
+////                    getSecretValueFromJson("omz-env-secrets-backend", "DB_USER"),
+////                    getSecretValueFromJson("omz-env-secrets-backend", "DB_PASSWORD")
+        "jdbc:mysql://localhost:3309/PUBLIC?useSSL=false&serverTimezone=Asia/Seoul", "root", "1234"
         );
+
     }
 
     public DatabaseCredentials getReaderSecret() {
         return new DatabaseCredentials(
-                getCachedSecret("omz-env-secrets-backend", "RDS_READER_DB_URL"),
-                getCachedSecret("omz-env-secrets-backend", "RDS_DB_USER"),
-                getCachedSecret("omz-env-secrets-backend", "RDS_DB_PASSWORD")
-//                    getSecretValueFromJson("omz-env-secrets-backend", "RDS_READER_DB_LOCAL_URL"),
-//                    getSecretValueFromJson("omz-env-secrets-backend", "DB_USER"),
-//                    getSecretValueFromJson("omz-env-secrets-backend", "DB_PASSWORD")
+//                getCachedSecret("omz-env-secrets-backend", "RDS_MONO_READER_DB_URL"),
+//                getCachedSecret("omz-env-secrets-backend", "RDS_DB_USER"),
+//                getCachedSecret("omz-env-secrets-backend", "RDS_DB_PASSWORD")
+////                    getSecretValueFromJson("omz-env-secrets-backend", "RDS_READER_DB_LOCAL_URL"),
+////                    getSecretValueFromJson("omz-env-secrets-backend", "DB_USER"),
+////                    getSecretValueFromJson("omz-env-secrets-backend", "DB_PASSWORD")
+        "jdbc:mysql://localhost:3310/PUBLIC?useSSL=false&serverTimezone=Asia/Seoul", "root", "1234"
         );
     }
 

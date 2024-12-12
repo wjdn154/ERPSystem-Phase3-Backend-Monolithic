@@ -3,8 +3,11 @@ spring:
     name: ERPSystem-phase3-Monolithic
   datasource:
     hikari:
-      max-lifetime: 600000 # 10분
-      idle-timeout: 0      # 유휴 연결 관리를 RDS 프록시에 위임
+      maximum-pool-size: 10
+      minimum-idle: 5
+      idle-timeout: 30000 # 유휴 연결을 30초 후 종료
+      max-lifetime: 1800000 # 연결 수명을 30분으로 제한
+      leak-detection-threshold: 2000 # 2초 이상 반환되지 않는 연결 로그 출력
     writer:
       driver-class-name: com.mysql.cj.jdbc.Driver
     reader:
